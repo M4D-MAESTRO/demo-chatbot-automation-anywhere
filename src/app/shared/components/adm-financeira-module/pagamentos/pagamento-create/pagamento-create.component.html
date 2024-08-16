@@ -1,0 +1,93 @@
+<ion-content appScrollTheme>
+  <form *ngIf="operacoes" [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+    <div class="surface-ground px-4 py-8 md:px-6 lg:px-8 ">
+      <div class="text-900 font-medium text-xl mb-1">Criar/Cadastrar</div>
+      <div class="surface-card p-4 shadow-2 border-round p-fluid ">
+        <div class="grid formgrid p-fluid">
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="custo" class="font-medium text-900">Custo</label>
+            <p-inputNumber id="custo" formControlName="custo" mode="decimal" [minFractionDigits]="2"
+              [maxFractionDigits]="2"></p-inputNumber>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('custo')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="col-8 lg:col-10 field mb-5">
+            <label for="operacao_id" class="text-900 font-medium mb-3">Operação</label>
+            <div class="ml-3 cursor-pointer pi pi-question-circle" (click)="detailOperacao()"></div>
+            <p-dropdown id="operacao_id" #drop_operacao [options]="operacoes.data" formControlName="operacao"
+              optionLabel="nome" [filter]="true" placeholder="Selecione uma operação" [virtualScroll]="true"
+              [virtualScrollItemSize]="38" [lazy]="true"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }"
+              (onLazyLoad)="paginarOperacao($event)" (onFilter)="onOperacaoFilter($event)"
+              (onFocus)="blurOperacao($event, drop_operacao)" (onChange)="changeOperacao($event)">
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+
+          <div *ngIf="enableDespesas && despesas" class="col-8 lg:col-10 field mb-5">
+            <label for="despesa_id" class="text-900 font-medium mb-3">Despesa</label>
+            <div class="ml-3 cursor-pointer pi pi-question-circle" (click)="detailDespesa()"></div>
+            <p-dropdown id="despesa_id" #drop_despesa [options]="despesas.data" formControlName="despesa"
+              optionLabel="nome" [filter]="true" placeholder="Selecione uma despesa" [virtualScroll]="true"
+              [virtualScrollItemSize]="38" [lazy]="true"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }"
+              (onLazyLoad)="paginarDespesa($event)" (onFilter)="onDespesaFilter($event)"
+              (onFocus)="blurDespesa($event, drop_despesa)">
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+            </p-dropdown>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="data_vencimento" class="font-medium text-900">Data de vencimento</label>
+            <p-calendar id="data_vencimento" [showIcon]="true" formControlName="data_vencimento">
+            </p-calendar>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="conta_original" class="font-medium text-900">Conta original</label>
+            <div *ngIf="contaOriginalId" class="ml-3 pi pi-check text-green-600"></div>
+            <div *ngIf="!contaOriginalId" class="ml-3 pi pi-times text-pink-600"></div>
+            <p-fileUpload #conta_original id="conta_original" mode="basic" name="conta_original"
+              chooseIcon="pi pi-upload" customUpload="true" [auto]="true"
+              (uploadHandler)="anexarContaOriginal($event, conta_original)" chooseLabel="Anexar Conta Original">
+            </p-fileUpload>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="comprovante" class="font-medium text-900">Comprovante</label>
+            <div *ngIf="comprovanteId" class="ml-3  pi pi-check text-green-600"></div>
+            <div *ngIf="!comprovanteId" class="ml-3  pi pi-times text-pink-600"></div>
+            <p-fileUpload #comprovante id="comprovante" mode="basic" name="comprovante" chooseIcon="pi pi-upload"
+              customUpload="true" [auto]="true" (uploadHandler)="anexarComprovante($event, comprovante)"
+              chooseLabel="Anexar Comprovante">
+            </p-fileUpload>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+        </div>
+        <div class="flex justify-content-end">
+          <button pButton pRipple label="Salvar" icon="pi pi-send" iconPos="right" class="w-auto" (click)="create()"
+            [disabled]="disableCreateBtn()"></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

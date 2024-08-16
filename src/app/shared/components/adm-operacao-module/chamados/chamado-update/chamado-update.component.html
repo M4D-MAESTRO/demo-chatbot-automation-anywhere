@@ -1,0 +1,216 @@
+<ion-content appScrollTheme>
+
+  <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+    <div class="surface-ground px-4 py-6 md:px-6 lg:px-8">
+      <div class="text-900 font-medium text-xl mb-1">Criar/Cadastrar</div>
+
+      <div class="surface-card p-4 shadow-2 border-round p-fluid">
+        <div class="grid formgrid p-fluid">
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="solicitante" class="font-medium text-900">Solicitante</label>
+            <input id="solicitante" placeholder="Solicitante" type="text" pInputText formControlName="solicitante"
+              [readonly]="true">
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="tempo_decorrido" class="font-medium text-900">Tempo decorrido desde a abertura</label>
+            <input id="tempo_decorrido" placeholder="Tempo decorrido" type="text" pInputText
+              formControlName="tempo_decorrido" [readonly]="true">
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="descricao">Tipo</label>
+            <p-dropdown [options]="filtros.tipo" placeholder="Selecione o tipo de chamado" formControlName="tipo"
+              (onChange)="changeTipo($event)" [readonly]="true">
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tipo')"></p-message>
+            </div>
+          </div>
+          <div *ngIf="form.get('tipo').value == ChamadoTipoEnum.EMPRESA" class="field mb-4 col-12 md:col-6">
+            <label for="nome_empresa" class="font-medium text-900">Nome da empresa</label>
+            <input id="nome_empresa" placeholder="Nome da empresa" type="text" pInputText
+              formControlName="nome_empresa">
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 3 dígitos/Obrigatório"
+                *ngIf="isInputError('nome_empresa')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="observacao_geral" class="font-medium text-900">Observação geral</label>
+            <input id="observacao_geral" placeholder="Observação geral" type="text" pInputText
+              formControlName="observacao_geral">
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 3 dígitos/Obrigatório"
+                *ngIf="isInputError('observacao_geral')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="tempo_sla" class="font-medium text-900">Tempo esperado (em horas)</label>
+            <p-inputNumber id="tempo_sla" placeholder="Tempo esperado (em horas)" type="text"
+              formControlName="tempo_sla" [min]="1"></p-inputNumber>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 1 hora" *ngIf="isInputError('tempo_sla')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 ">
+            <p-panel header="Descrições do serviço" [toggleable]="true">
+              <div class="p-inputgroup">
+                <input #addDescricoesServico type="text"
+                  (keyup.enter)="addToList(addDescricoesServico, 'descricoes_servico')" role="textbox"
+                  class="p-orderlist-filter-input p-inputtext p-component" placeholder="Descrições do serviço">
+                <button pButton pRipple icon="pi pi-plus"
+                  (click)="addToList(addDescricoesServico, 'descricoes_servico')"></button>
+              </div>
+
+              <div *ngFor="let t of form.get('descricoes_servico').value" class="mt-3 pt-1">
+                <p class="flex justify-content-between">{{ t }}
+                  <i class="pi pi-times cursor-pointer" (click)="removeFromList(t, 'descricoes_servico')"></i>
+                </p>
+                <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+              </div>
+
+              <div *ngIf="isEmptyList('descricoes_servico')" class="mt-3 pt-1">
+                <app-attention-surface title="Atenção" subtitle="Sem descrições"
+                  message="É obrigatório o preenchimento de ao menos um item"></app-attention-surface>
+              </div>
+            </p-panel>
+
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 1 item"
+                *ngIf="isInputError('descricoes_servico')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 ">
+            <p-panel header="Produtos utilizados" [collapsed]="true" [toggleable]="true">
+              <div class="p-inputgroup">
+                <input #addProdutosUtilizados type="text"
+                  (keyup.enter)="addToList(addProdutosUtilizados, 'produtos_utilizados')" role="textbox"
+                  class="p-orderlist-filter-input p-inputtext p-component" placeholder="Descrições do serviço">
+                <button pButton pRipple icon="pi pi-plus"
+                  (click)="addToList(addProdutosUtilizados, 'produtos_utilizados')"></button>
+              </div>
+
+              <div *ngFor="let t of form.get('produtos_utilizados').value" class="mt-3 pt-1">
+                <p class="flex justify-content-between">{{ t }}
+                  <i class="pi pi-times cursor-pointer" (click)="removeFromList(t, 'produtos_utilizados')"></i>
+                </p>
+                <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+              </div>
+
+              <div *ngIf="isEmptyList('produtos_utilizados')" class="mt-3 pt-1">
+                <app-attention-surface title="Atenção" subtitle="Sem produtos utilizados"
+                  message="Preenchimento NÃO obrigatório"></app-attention-surface>
+              </div>
+            </p-panel>
+
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 1 item"
+                *ngIf="isInputError('produtos_utilizados')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div class="field mb-4 col-12 ">
+            <p-panel header="Observações do serviço" [collapsed]="true" [toggleable]="true">
+              <div class="p-inputgroup">
+                <input #addObservacoesServico type="text"
+                  (keyup.enter)="addToList(addObservacoesServico, 'observacoes_servico')" role="textbox"
+                  class="p-orderlist-filter-input p-inputtext p-component" placeholder="Descrições do serviço">
+                <button pButton pRipple icon="pi pi-plus"
+                  (click)="addToList(addObservacoesServico, 'observacoes_servico')"></button>
+              </div>
+
+              <div *ngFor="let t of form.get('observacoes_servico').value" class="mt-3 pt-1">
+                <p class="flex justify-content-between">{{ t }}
+                  <i class="pi pi-times cursor-pointer" (click)="removeFromList(t, 'observacoes_servico')"></i>
+                </p>
+                <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+              </div>
+
+              <div *ngIf="isEmptyList('observacoes_servico')" class="mt-3 pt-1">
+                <app-attention-surface title="Atenção" subtitle="Sem observações para o serviço"
+                  message="Preenchimento NÃO obrigatório"></app-attention-surface>
+              </div>
+            </p-panel>
+
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 1 item"
+                *ngIf="isInputError('observacoes_servico')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div *ngIf="users" class="col-12 field mb-5">
+            <label for="executor" class="text-900 font-medium mb-3">Executor</label>
+            <p-dropdown id="executor" [options]="users.data" [filter]="true" placeholder="Selecione"
+              [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" formControlName="executor_id"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+              optionValue="id" filterBy="nome,cpf">
+              <ng-template pTemplate="filter" let-options="options">
+                <div class="flex p-3">
+                  <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                    <input #searchUser type="text" pInputText placeholder="Procurar">
+                    <button pButton pRipple icon="pi pi-search" (click)="paginarUser(searchUser)"></button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="item">
+                <div>
+                  <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="selectedItem">
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('executor_id')"></p-message>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+
+          <div class="field mb-4 col-12 md:col-4">
+            <label for="foto" class="font-medium text-900">Arquivo/Imagem</label>
+            <div *ngIf="currentFoto" class="ml-5 pi pi-check text-green-600"></div>
+            <div *ngIf="!currentFoto" class="ml-5 pi pi-times text-pink-600"></div>
+            <p-fileUpload #foto id="foto" mode="basic" name="foto" chooseIcon="pi pi-upload" customUpload="true"
+              [auto]="true" accept="" (uploadHandler)="anexarComprovante($event, foto)" chooseLabel="Anexar uma imagem">
+            </p-fileUpload>
+          </div>
+          <div *ngIf="currentFoto && currentFoto.file_url" class="field mb-4 col-12 md:col-8 ">
+            <div class="border-2 border-primary w-25rem h-15rem my-auto">
+              <p-image [src]="currentFoto.file_url" alt="Image" width="400" height="230" [preview]="true"></p-image>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+
+        </div>
+        <div class="flex justify-content-end">
+          <button pButton pRipple label="Salvar" icon="pi pi-send" iconPos="right" class="w-auto" (click)="update()"
+            [disabled]="disableCreateBtn()"></button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

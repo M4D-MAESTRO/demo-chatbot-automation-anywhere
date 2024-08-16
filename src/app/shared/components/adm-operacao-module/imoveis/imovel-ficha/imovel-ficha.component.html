@@ -1,0 +1,911 @@
+<ion-content appScrollTheme>
+
+    <div *ngIf="imovel" class="surface-ground">
+        <div class="surface-section px-6 py-5">
+            <div class="flex align-items-start flex-column lg:flex-row lg:justify-content-between">
+                <div class="flex align-items-start flex-column md:flex-row">
+                    <div>
+                        <div class="flex text-900 font-medium text-3xl justify-content-between">
+                            <span>{{ imovel.condominio.nome }} ({{
+                                imovel.condominio.codigo }})
+                            </span>
+                        </div>
+                        <div class="flex align-items-center flex-wrap text-sm">
+                            <div class="mr-5 mt-3">
+                                <span class="font-medium text-500">{{ imovel.condominio.descricao }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-6 py-5">
+            <div class="surface-card p-4 shadow-2 border-round">
+                <div class="flex font-medium text-2xl text-900 mb-3 justify-content-between">
+                    <span>Imóvel ID</span>
+                    <button pButton pRipple icon="pi pi-file-pdf"
+                        class="p-button-rounded p-button-help cursor-pointer ml-auto"
+                        (click)="downloadPdfCompleto()"></button>
+                    <p-menu #downloadMenu appendTo="body" [popup]="true" [model]="editMenuItens"></p-menu>
+                </div>
+                <div class="text-500 mb-5">{{ imovel.id }}</div>
+                <ul class="list-none p-0 m-0 border-top-1 border-300">
+                    <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                        <div class="text-500 w-full md:w-2 font-medium">RGI</div>
+                        <div class="text-900 w-full md:w-10">{{ imovel.numero_rgi }}</div>
+                    </li>
+                    <li class="flex align-items-center py-3 px-2 flex-wrap">
+                        <div class="text-500 w-full md:w-2 font-medium">IPTU</div>
+                        <div class="text-900 w-full md:w-10 line-height-3">{{ imovel.numero_iptu }}</div>
+                    </li>
+                    <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                        <div class="text-500 w-full md:w-2 font-medium">Bloco</div>
+                        <div class="text-900 w-full md:w-10">{{ imovel.numero_bloco }} ({{ imovel.nome_bloco || 'Bloco
+                            sem nome' }})</div>
+                    </li>
+                    <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                        <div class="text-500 w-full md:w-2 font-medium">1° Prepronente</div>
+                        <div class="text-900 w-full md:w-10">
+                            <div class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Nome</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente1.nome }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">CPF</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente1.cpf | cpfMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">RG</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente1.identidade }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Data de nascimento</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente1.data_nascimento | date: 'dd/MM/yyyy'
+                                            }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente1.tel1 | phoneMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone (alternativo)</span>
+                                        </div>
+                                        <div *ngIf="imovel.preponente1.tel2" class="text-700">{{ imovel.preponente1.tel2
+                                            | phoneMask }}</div>
+                                        <div *ngIf="!imovel.preponente1.tel2" class="text-700">{{ "Não informado" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">E-mail</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente1.email }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <p-panel header="Dependentes" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.preponente1.dependentes" dataKey="id"
+                                            [rowHover]="true" [showCurrentPageReport]="true"
+                                            styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','cpf','grau_parentesco']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="cpf" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            CPF
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="grau_parentesco" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Grau de Parentesco
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-dependente>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ dependente.user_dependente.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">cpf</span>
+                                                        <span>{{ dependente.user_dependente.cpf | cpfMask }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">grau_parentesco</span>
+                                                        <span>{{ dependente.grau_parentesco }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum dependente cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+
+                                <div class="col-12">
+                                    <p-panel header="Pets" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.preponente1.pets" dataKey="id" [rowHover]="true"
+                                            [showCurrentPageReport]="true" styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','especie']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="especie" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Espécie
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-pet>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ pet.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">especie</span>
+                                                        <span>{{ pet.especie }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum pet cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                        <div class="text-500 w-full md:w-2 font-medium">2° Prepronente</div>
+                        <div class="text-900 w-full md:w-10">
+                            <div *ngIf="imovel.preponente2" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Nome</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente2.nome }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">CPF</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente2.cpf | cpfMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">RG</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente2.identidade }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Data de nascimento</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente2.data_nascimento | date: 'dd/MM/yyyy'
+                                            }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente2.tel1 | phoneMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone (alternativo)</span>
+                                        </div>
+                                        <div *ngIf="imovel.preponente2.tel2" class="text-700">{{ imovel.preponente2.tel2
+                                            | phoneMask }}</div>
+                                        <div *ngIf="!imovel.preponente2.tel2" class="text-700">{{ "Não informado" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">E-mail</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente2.email }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <p-panel header="Dependentes" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.preponente2.dependentes" dataKey="id"
+                                            [rowHover]="true" [showCurrentPageReport]="true"
+                                            styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','cpf','grau_parentesco']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="cpf" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            CPF
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="grau_parentesco" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Grau de Parentesco
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-dependente>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ dependente.user_dependente.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">cpf</span>
+                                                        <span>{{ dependente.user_dependente.cpf | cpfMask }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">grau_parentesco</span>
+                                                        <span>{{ dependente.grau_parentesco }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum dependente cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                                <div class="col-12">
+                                    <p-panel header="Pets" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.preponente2.pets" dataKey="id" [rowHover]="true"
+                                            [showCurrentPageReport]="true" styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','especie']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="especie" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Espécie
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-pet>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ pet.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">especie</span>
+                                                        <span>{{ pet.especie }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum pet cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                            </div>
+                            <div *ngIf="!imovel.preponente2" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Não há</span>
+                                        </div>
+                                        <div class="text-700">Não há um segundo preponente registrado</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                        <div class="text-500 w-full md:w-2 font-medium">3° Prepronente</div>
+                        <div class="text-900 w-full md:w-10">
+                            <div *ngIf="imovel.preponente3" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Nome</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente3.nome }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">CPF</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente3.cpf | cpfMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">RG</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente3.identidade }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Data de nascimento</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente3.data_nascimento | date: 'dd/MM/yyyy'
+                                            }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente3.tel1 | phoneMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone (alternativo)</span>
+                                        </div>
+                                        <div *ngIf="imovel.preponente3.tel2" class="text-700">{{ imovel.preponente3.tel2
+                                            | phoneMask }}</div>
+                                        <div *ngIf="!imovel.preponente3.tel2" class="text-700">{{ "Não informado" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">E-mail</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.preponente3.email }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <p-panel header="Dependentes" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.preponente3.dependentes" dataKey="id"
+                                            [rowHover]="true" [showCurrentPageReport]="true"
+                                            styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','cpf','grau_parentesco']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="cpf" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            CPF
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="grau_parentesco" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Grau de Parentesco
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-dependente>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ dependente.user_dependente.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">cpf</span>
+                                                        <span>{{ dependente.user_dependente.cpf | cpfMask }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">grau_parentesco</span>
+                                                        <span>{{ dependente.grau_parentesco }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum dependente cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                                <div class="col-12">
+                                    <p-panel header="Pets" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.preponente3.pets" dataKey="id" [rowHover]="true"
+                                            [showCurrentPageReport]="true" styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','especie']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="especie" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Espécie
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-pet>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ pet.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">especie</span>
+                                                        <span>{{ pet.especie }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum pet cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                            </div>
+                            <div *ngIf="!imovel.preponente3" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Não há</span>
+                                        </div>
+                                        <div class="text-700">Não há um terceiro preponente registrado</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                        <div class="text-500 w-full md:w-2 font-medium">Inquilino</div>
+                        <div class="text-900 w-full md:w-10">
+                            <div *ngIf="imovel.inquilino" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Nome</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.inquilino.nome }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">CPF</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.inquilino.cpf | cpfMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">RG</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.inquilino.identidade }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Data de nascimento</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.inquilino.data_nascimento | date: 'dd/MM/yyyy'
+                                            }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.inquilino.tel1 | phoneMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone (alternativo)</span>
+                                        </div>
+                                        <div *ngIf="imovel.inquilino.tel2" class="text-700">{{ imovel.inquilino.tel2
+                                            | phoneMask }}</div>
+                                        <div *ngIf="!imovel.inquilino.tel2" class="text-700">{{ "Não informado" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">E-mail</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.inquilino.email }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <p-panel header="Dependentes" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.inquilino.dependentes" dataKey="id"
+                                            [rowHover]="true" [showCurrentPageReport]="true"
+                                            styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','cpf','grau_parentesco']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="cpf" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            CPF
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="grau_parentesco" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Grau de Parentesco
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-dependente>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ dependente.user_dependente.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">cpf</span>
+                                                        <span>{{ dependente.user_dependente.cpf | cpfMask }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">grau_parentesco</span>
+                                                        <span>{{ dependente.grau_parentesco }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum dependente cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                                <div class="col-12">
+                                    <p-panel header="Pets" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.inquilino.pets" dataKey="id" [rowHover]="true"
+                                            [showCurrentPageReport]="true" styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','especie']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="especie" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Espécie
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-pet>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ pet.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">especie</span>
+                                                        <span>{{ pet.especie }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum pet cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                            </div>
+                            <div *ngIf="!imovel.inquilino" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Não há</span>
+                                        </div>
+                                        <div class="text-700">Não há um inquilino registrado</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                        <div class="text-500 w-full md:w-2 font-medium">Proprietário de Repasse</div>
+                        <div class="text-900 w-full md:w-10">
+                            <div *ngIf="imovel.proprietario_repasse" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Nome</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.proprietario_repasse.nome }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">CPF</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.proprietario_repasse.cpf | cpfMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">RG</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.proprietario_repasse.identidade }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Data de nascimento</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.proprietario_repasse.data_nascimento | date:
+                                            'dd/MM/yyyy'
+                                            }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.proprietario_repasse.tel1 | phoneMask }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">N° telefone (alternativo)</span>
+                                        </div>
+                                        <div *ngIf="imovel.proprietario_repasse.tel2" class="text-700">{{
+                                            imovel.proprietario_repasse.tel2
+                                            | phoneMask }}</div>
+                                        <div *ngIf="!imovel.proprietario_repasse.tel2" class="text-700">{{ "Não
+                                            informado" }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">E-mail</span>
+                                        </div>
+                                        <div class="text-700">{{ imovel.proprietario_repasse.email }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <p-panel header="Dependentes" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.proprietario_repasse.dependentes" dataKey="id"
+                                            [rowHover]="true" [showCurrentPageReport]="true"
+                                            styleClass="p-datatable-striped"
+                                            [globalFilterFields]="['nome','cpf','grau_parentesco']" [filterDelay]="2"
+                                            responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="cpf" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            CPF
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="grau_parentesco" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Grau de Parentesco
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-dependente>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ dependente.user_dependente.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">cpf</span>
+                                                        <span>{{ dependente.user_dependente.cpf | cpfMask }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">grau_parentesco</span>
+                                                        <span>{{ dependente.grau_parentesco }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum dependente cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                                <div class="col-12">
+                                    <p-panel header="Pets" [toggleable]="true" [collapsed]="true">
+                                        <p-table #dt [value]="imovel.proprietario_repasse.pets" dataKey="id"
+                                            [rowHover]="true" [showCurrentPageReport]="true"
+                                            styleClass="p-datatable-striped" [globalFilterFields]="['nome','especie']"
+                                            [filterDelay]="2" responsiveLayout="scroll">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <th pSortableColumn="nome" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Nome
+                                                        </div>
+                                                    </th>
+
+                                                    <th pSortableColumn="especie" style="min-width: 10rem">
+                                                        <div class="flex justify-content-between align-items-center">
+                                                            Espécie
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-pet>
+                                                <tr class="p-selectable-row mb-8">
+                                                    <td>
+                                                        <span class="p-column-title">nome</span>
+                                                        <span>{{ pet.nome }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="p-column-title">especie</span>
+                                                        <span>{{ pet.especie }}</span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td colspan="8">Nenhum pet cadastrado.</td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </p-panel>
+                                </div>
+                            </div>
+                            <div *ngIf="!imovel.proprietario_repasse" class="grid mt-0 mr-0">
+                                <div class="col-12 md:col-6">
+                                    <div class="p-3 border-1 surface-border border-round surface-card">
+                                        <div class="text-900 mb-2">
+                                            <span class="font-medium">Não há</span>
+                                        </div>
+                                        <div class="text-700">Não há um proprietário de repasse registrado</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+    </ion-toolbar>
+</ion-footer>

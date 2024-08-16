@@ -1,0 +1,103 @@
+<div class="surface-50 px-4 py-4 md:px-6 lg:px-8">
+  <div class="grid">
+    <div class="col-12 lg:col-3 col-offset-2">
+      <div class="surface-card shadow-2 p-3 border-1 border-50 border-round">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Versão da Aplicação</span>
+            <div class="text-900 font-medium text-xl">{{ getSystemInfo().SYSTEM_VERSION }}</div>
+          </div>
+          <div class="flex align-items-center justify-content-center bg-cyan-100 border-round"
+            style="width:2.5rem;height:2.5rem">
+            <ion-icon class="text-cyan-500 text-xl" name="desktop-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 lg:col-3  col-offset-2">
+      <div class="surface-card shadow-2 p-3 border-1 border-50 border-round">
+        <div class="flex justify-content-between mb-3">
+          <div class="">
+            <span class="block text-500 font-medium mb-3">Versão da API</span>
+            <div *ngIf="apiInfo" class="text-900 font-medium text-xl ">{{ apiInfo.version }}</div>
+            <div *ngIf="!apiInfo" class="text-900 font-medium text-xl ">Não foi possível carregar</div>
+          </div>
+          <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+            style="width:2.5rem;height:2.5rem">
+            <ion-icon class="text-orange-500 text-xl" name="server-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="surface-card shadow-2 border-round p-4 text-center">
+        <div class="text-3xl text-900 font-medium mb-5">{{ getSystemInfo().SYSTEM_NICKNAME }}</div>
+        <ul class="list-none p-0 m-0 ">
+          <li class="pb-3 border-bottom-1 border-primary ">
+            <div class="font-medium text-900 mb-2 text-xl">{{ getSystemInfo().SYSTEM_SHORT_DESC }}</div>
+            <div class="line-height-3 text-800 ">
+              <span class="">{{ getSystemInfo().SYSTEM_LONG_DESC }}</span>
+              <br>
+              <span>Licensiado para:
+                <strong>{{ getSystemInfo().SYSTEM_LICENSE }}</strong>
+              </span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-12 xl:col-6">
+      <div class="surface-card border-round shadow-2 p-4 text-center">
+        <img src="assets/imgs/outros/politica-privacidade.jpeg" alt="Image"
+          class="mx-auto block mb-4 terms-img border-round-xl	border-2	border-primary	">
+        <div class="text-900 font-medium mb-2 text-xl">Política de privacidade</div>
+        <p class="mt-0 mb-4 p-0 line-height-3">Ao usar nossa plataforma, você concorda com a nossa política de
+          privacidade.</p>
+        <button pButton pRipple label="Acessar" icon="pi pi-external-link p-button-rounded" iconPos="right"
+          (click)="goToPolicyLink()"></button>
+      </div>
+    </div>
+    <div class="col-12 xl:col-6">
+      <div class="surface-card border-round shadow-2 p-4 text-center">
+        <img src="assets/imgs/outros/termos-condicoes.jpeg" alt="Image"
+          class="mx-auto block mb-4 terms-img border-round-xl	border-2	border-primary	">
+        <div class="text-900 font-medium mb-2 text-xl">Termos & Condições</div>
+        <p class="mt-0 mb-4 p-0 line-height-3">Ao usar nossa plataforma, você concorda com os nossos termos e condições.
+        </p>
+        <button pButton pRipple label="Acessar" icon="pi pi-external-link p-button-rounded" iconPos="right"
+          (click)="goToTermsLink()"></button>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="surface-card shadow-2 border-round p-4 text-center">
+        <div class="text-3xl text-900 font-medium mb-5">{{ getEmpresaInfo().EMPRESA_NOME }}</div>
+        <ul class="list-none p-0 m-0 mt-3 text-center mx-auto">
+          <li class="flex justify-content-center align-items-center mb-2 cursor-pointer text-white"
+            (click)="openLink(getEmpresaInfo().EMPRESA_WHATSAPP_LINK )">
+            <i class="pi pi-whatsapp mr-2"></i>
+            <span>{{ getEmpresaInfo().EMPRESA_WHATSAPP_FORMATED }}</span>
+          </li>
+          <li class="flex justify-content-center align-items-center cursor-pointer mb-4 text-white"
+            (click)="goToSendEmail()">
+            <i class="pi pi-inbox mr-2"></i>
+            <span>{{ getEmpresaInfo().EMPRESA_EMAIL }}</span>
+          </li>
+          <li
+            class="flex justify-content-center justify-content-center align-items-center mb-2 cursor-pointer text-white"
+            (click)="openLink(getEmpresaInfo().EMPRESA_FACEBOOK_LINK)">
+            <i class="pi pi-facebook mr-2"></i>
+            <span>{{ getEmpresaInfo().EMPRESA_FACEBOOK_NOME }}</span>
+          </li>
+          <li class="flex justify-content-center align-items-center mb-2 cursor-pointer text-white"
+            (click)="openLink(getEmpresaInfo().EMPRESA_INSTAGRAM_LINK)">
+            <i class="pi pi-instagram mr-2"></i>
+            <span>{{ getEmpresaInfo().EMPRESA_INSTAGRAM_NOME }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,218 @@
+<ng-container *ngIf="user">
+  <ion-content appScrollTheme>
+
+    <section class="flex flex-column bg-black-alpha-90 h-full">
+      <nav class="bg-black-alpha-90 px-4 flex justify-content-between relative xl:static" style="min-height:70px">
+        <a pRipple class="cursor-pointer block xl:hidden align-self-center text-700" pStyleClass="@next"
+          enterClass="hidden" leaveToClass="hidden" [hideOnOutsideClick]="true">
+          <i class="pi pi-bars text-4xl text-300"></i>
+        </a>
+        <div class="bg-black-alpha-90 flex-grow-1 justify-content-between hidden xl:flex absolute xl:static w-full left-0 
+          top-100 z-1 shadow-2 xl:shadow-none surface-900">
+          <ul class="list-none p-0 m-0 flex select-none flex-column xl:flex-row xl:gap-2">
+            <li class="xl:flex xl:align-items-end">
+              <a pRipple
+                class="xl:border-round-top flex align-items-center h-3rem px-3 font-medium cursor-pointer transition-colors transition-duration-150"
+                [ngClass]="{'surface-50 text-900': tabMenu === 1, 'surface-700 text-50': tabMenu !== 1}"
+                (click)="tabMenu = 1">
+                <i class="pi pi-cog mr-2" [ngClass]="{'text-800': tabMenu === 1}"></i>
+                <span>Perfil</span>
+              </a>
+            </li>
+            <!--
+            <li class="xl:flex xl:align-items-end">
+              <a pRipple class="xl:border-round-top flex align-items-center h-3rem px-3 font-medium cursor-pointer 
+                transition-colors transition-duration-150"
+                [ngClass]="{'surface-50 text-900': tabMenu === 0, 'surface-700 text-50': tabMenu !== 0}"
+                (click)="tabMenu = 0">
+                <i class="pi pi-bolt mr-2" [ngClass]="{'text-800': tabMenu === 0}"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="xl:flex xl:align-items-end">
+              <a pRipple
+                class="xl:border-round-top flex align-items-center h-3rem px-3 font-medium cursor-pointer transition-colors transition-duration-150"
+                [ngClass]="{'surface-50 text-900': tabMenu === 2, 'surface-700 text-50': tabMenu !== 2}"
+                (click)="tabMenu = 2">
+                <i class="pi pi-sitemap mr-2" [ngClass]="{'text-800': tabMenu === 2}"></i>
+                <span class="mr-2">Hierarquia</span>
+              </a>
+            </li>
+            <li class="xl:flex xl:align-items-end">
+              <a pRipple
+                class="xl:border-round-top flex align-items-center h-3rem px-3 font-medium cursor-pointer transition-colors transition-duration-150"
+                [ngClass]="{'surface-50 text-900': tabMenu === 3, 'surface-700 text-50': tabMenu !== 3}"
+                (click)="tabMenu = 3">
+                <i class="pi pi-comments mr-2" [ngClass]="{'text-800': tabMenu === 3}"></i>
+                <span>Mensages & Notificações</span>
+                <span class="p-tag border-circle bg-cyan-500 text-white ml-2">3</span>
+              </a>
+            </li>
+          -->
+          </ul>
+          <ul
+            class="list-none p-0 m-0 flex xl:align-items-center select-none flex-column xl:flex-row border-top-1 surface-border xl:border-top-none">
+            <!--
+            <li>
+              <a pRipple
+                class="flex h-3rem w-full xl:w-3rem px-3 xl:px-0 justify-content-start xl:justify-content-center align-items-center text-orange-600 hover:surface-hover font-medium xl:border-round cursor-pointer transition-colors transition-duration-150"
+                (click)="tabMenu = 3">
+                <i class="pi pi-inbox text-base xl:text-2xl mr-2 xl:mr-0"></i>
+                <span class="block xl:hidden font-medium">Inbox</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex h-3rem w-full xl:w-3rem px-3 xl:px-0 justify-content-start xl:justify-content-center align-items-center text-cyan-600 hover:surface-hover font-medium xl:border-round cursor-pointer transition-colors transition-duration-150"
+                (click)="tabMenu = 3">
+                <i class="pi pi-bell text-base xl:text-2xl mr-2 xl:mr-0" pBadge severity="danger"></i>
+                <span class="block xl:hidden font-medium">Notificações</span>
+              </a>
+            </li>
+          -->
+            <li class="border-top-1 surface-border xl:border-top-none">
+              <a pRipple class="flex h-3rem w-full xl:w-3rem px-3 xl:px-0 justify-content-start xl:justify-content-center 
+                align-items-center hover:surface-hover font-medium xl:border-round cursor-pointer transition-colors 
+                transition-duration-150" (click)="tabMenu = 1">
+                <img class="border-circle border-2 border-primary mr-3 xl:mr-0"
+                  [src]="user?.avatar_url || 'assets/imgs/outros/default-user.jpg'" style="width: 32px; height: 32px" />
+                <div class="block xl:hidden" [ngClass]="{'text-900': tabMenu === 1, 'text-50': tabMenu !== 1}">
+                  <span class="block font-medium">{{ user.nome }}</span>
+                  <span class="block font-medium text-sm">{{ user.cargo?.nome || "Sem cargo definido" }}</span>
+                </div>
+              </a>
+            </li>
+            <li *ngIf="showCloseButton">
+              <a pRipple class="flex h-3rem w-full xl:w-3rem px-3 xl:px-0 justify-content-start xl:justify-content-center 
+                align-items-center text-pink-600 hover:surface-hover font-medium xl:border-round cursor-pointer 
+                transition-colors transition-duration-150" (click)="fechar()">
+                <i class="pi pi-times-circle text-base xl:text-3xl mr-5 xl:mr-0 ml-2" pBadge severity="danger"></i>
+                <span class="block xl:hidden font-medium">Fechar</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div id="dashboard" *ngIf="tabMenu == 0" class="flex flex-column flex-auto bg-black-alpha-90">
+        <div class="surface-section pl-1 py-4 lg:py-5 lg:px-3 h-full w-full border-round-top-3xl">
+          <app-contas-colaborador-main [user]="user"></app-contas-colaborador-main>
+        </div>
+      </div>
+
+      <div id="perfil" *ngIf="tabMenu == 1" class="flex flex-column flex-auto bg-black-alpha-90">
+        <div class="surface-section px-4 py-4 lg:py-5 lg:px-6 h-full border-round-top-3xl">
+          <div class="flex flex-column md:flex-row w-full justify-content-between md:align-itsems-center">
+            <div>
+              <h2 class="mt-0 mb-2 text-900 font-medium text-2xl">Perfil</h2>
+              <p class="mt-0 mb-0 text-500">Verifique e atualize informações do seu colaborador.</p>
+            </div>
+          </div>
+          <p-divider styleClass="my-5"></p-divider>
+
+          <div class="p-fluid flex flex-column lg:flex-row">
+            <ul class="list-none m-0 p-0 flex flex-row lg:flex-column justify-content-between 
+              lg:justify-content-start mb-5 lg:mb-0">
+              <li>
+                <a pRipple class="lg:w-15rem flex align-items-center cursor-pointer p-3 border-round hover:surface-200 
+                  transition-duration-150 transition-colors" [ngClass]="{'surface-200': tabPerfil === 0}"
+                  (click)="tabPerfil = 0">
+                  <i class="pi pi-user md:mr-2"
+                    [ngClass]="{'text-700' : tabPerfil === 0, 'text-600': tabPerfil !== 0}"></i>
+                  <span class="font-medium hidden md:block"
+                    [ngClass]="{'text-800': tabPerfil === 0, 'text-700': tabPerfil !== 0}">Usuário</span>
+                </a>
+              </li>
+              <li>
+                <a pRipple class="lg:w-15rem flex align-items-center cursor-pointer p-3 border-round hover:surface-200 
+                  transition-duration-150 transition-colors" [ngClass]="{'surface-200': tabPerfil === 1}"
+                  (click)="tabPerfil = 1">
+                  <i class="pi pi-map md:mr-2"
+                    [ngClass]="{'text-700' : tabPerfil === 1, 'text-600': tabPerfil !== 1}"></i>
+                  <span class="font-medium hidden md:block"
+                    [ngClass]="{'text-800': tabPerfil === 1, 'text-700': tabPerfil !== 1}">Endereço</span>
+                </a>
+              </li>
+
+              <li *ngIf="enableMessageAndNotification">
+                <a pRipple class="lg:w-15rem flex align-items-center cursor-pointer p-3 border-round hover:surface-200 
+                  transition-duration-150 transition-colors" [ngClass]="{'surface-200': tabPerfil === 2}"
+                  (click)="tabPerfil = 2">
+                  <i class="pi pi-key md:mr-2"
+                    [ngClass]="{'text-700' : tabPerfil === 2, 'text-600': tabPerfil !== 2}"></i>
+                  <span class="font-medium hidden md:block"
+                    [ngClass]="{'text-800': tabPerfil === 2, 'text-700': tabPerfil !== 2}">Senha</span>
+                </a>
+              </li>
+            </ul>
+            <ng-container *ngIf="tabPerfil == 0">
+              <app-funcionario-detail [user]="user" [isModal]="false" (updatedEvent)="updateUser($event)">
+              </app-funcionario-detail>
+            </ng-container>
+
+            <ng-container *ngIf="tabPerfil == 1">
+              <app-update-endereco [currentEndereco]="user" [isFuncionario]="true" [isModal]="false"
+                (updatedEvent)="updateUser($event)">
+              </app-update-endereco>
+            </ng-container>
+
+            <ng-container *ngIf="tabPerfil == 2">
+              <app-user-edit-password [isModal]="false"></app-user-edit-password>
+            </ng-container>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="hierarquia" *ngIf="tabMenu == 2" class="flex flex-column flex-auto bg-black-alpha-90">
+        <ng-container *ngIf="selectedHierarquia==1">
+          <app-hierarquia-area class="mb-0 pb-0"></app-hierarquia-area>
+        </ng-container>
+
+        <ng-container *ngIf="selectedHierarquia==2">
+          <app-hierarquia-cargo class="mb-0 pb-0"></app-hierarquia-cargo>
+        </ng-container>
+
+
+        <ng-container *ngIf="selectedHierarquia==3">
+          <app-hierarquia-colaborador class="mb-0 pb-0"></app-hierarquia-colaborador>
+        </ng-container>
+
+        <div class="flex justify-content-center  mt-0 pt-0">
+          <button pButton pRipple label="Área" iconPos="right" class="w-auto mb-5"
+            [class.p-button-outlined]="selectedHierarquia==1" (click)="selectedHierarquia=1"></button>
+
+          <button pButton pRipple label="Cargo" iconPos="right" class="w-auto mb-5 ml-2"
+            [class.p-button-outlined]="selectedHierarquia==2" (click)="selectedHierarquia=2"></button>
+
+          <button pButton pRipple label="Colaborador" iconPos="right" class="w-auto mb-5 ml-2"
+            [class.p-button-outlined]="selectedHierarquia==3" (click)="selectedHierarquia=3"></button>
+        </div>
+      </div>
+
+      <!--
+      <div id="messagens_notificacao" *ngIf="tabMenu == 3" class="flex flex-column flex-auto bg-black-alpha-90">
+        <ng-container *ngIf="enableMessageAndNotification">
+          Mostrar mensagens e notificações
+        </ng-container>
+
+        <ng-container *ngIf="!enableMessageAndNotification">
+          <div class="surface-section px-4 py-4 lg:py-5 lg:px-6 h-full border-round-top-3xl">
+            <div class="surface-ground px-4 py-4 md:px-6 lg:px-8 h-full">
+              <div
+                style="background: radial-gradient(50% 109137.91% at 50% 50%, rgba(233, 203, 30, 0.1) 0%, rgba(254, 253, 244, 0) 100%);"
+                class="text-center">
+                <span class="bg-surface-50 text-yellow-500 font-bold text-2xl inline-block px-3">Privado</span>
+              </div>
+              <div class="mt-6 mb-5 font-bold text-6xl text-900 text-center">Essas informações só podem ser
+                acessadas pelo próprio usuário</div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      -->
+
+    </section>
+
+  </ion-content>
+</ng-container>

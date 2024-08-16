@@ -1,0 +1,26 @@
+.user-name {
+    margin-top: 10px;
+    margin-bottom: 15px;
+
+    strong {
+        font-style: italic;
+    }
+}
+
+:host ::ng-deep {
+    .perfil-container {
+        .p-button {
+            height: 40px !important;
+        }
+    }
+}
+
+.change-img {
+    font-size: 12px;
+    color: var(--back-text);
+    margin-bottom: 15px;
+}
+
+.change-img:hover {
+    cursor: pointer;
+}

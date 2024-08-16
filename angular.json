@@ -1,0 +1,437 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "app": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "www",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*.svg",
+                "input": "node_modules/ionicons/dist/ionicons/svg",
+                "output": "./svg"
+              }
+            ],
+            "styles": [
+              "src/theme/variables.scss",
+              "src/global.scss",
+              "src/theme/styles.scss",
+              "node_modules/primeflex/primeflex.css",
+              {
+                "input": "src/theme/theme-bootstrap4-dark-yellow.scss",
+                "bundleName": "bootstrap4-dark-yellow",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-bootstrap4-light-purple.scss",
+                "bundleName": "bootstrap4-light-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-bootstrap4-dark-purple.scss",
+                "bundleName": "bootstrap4-dark-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-bootstrap4-light-blue.scss",
+                "bundleName": "bootstrap4-light-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-bootstrap4-dark-blue.scss",
+                "bundleName": "bootstrap4-dark-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-arya-blue.scss",
+                "bundleName": "arya-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-arya-orange.scss",
+                "bundleName": "arya-orange",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-arya-purple.scss",
+                "bundleName": "arya-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-arya-green.scss",
+                "bundleName": "arya-green",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-md-light-indigo.scss",
+                "bundleName": "md-light-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-md-dark-indigo.scss",
+                "bundleName": "md-dark-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-md-dark-deeppurple.scss",
+                "bundleName": "md-dark-deeppurple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-md-light-deeppurple.scss",
+                "bundleName": "md-light-deeppurple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-mdc-light-indigo.scss",
+                "bundleName": "mdc-light-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-mdc-dark-indigo.scss",
+                "bundleName": "mdc-dark-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-mdc-dark-deeppurple.scss",
+                "bundleName": "mdc-dark-deeppurple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-mdc-light-deeppurple.scss",
+                "bundleName": "mdc-light-deeppurple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-saga-blue.scss",
+                "bundleName": "saga-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-saga-green.scss",
+                "bundleName": "saga-green",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-saga-orange.scss",
+                "bundleName": "saga-orange",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-saga-purple.scss",
+                "bundleName": "saga-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-vela-blue.scss",
+                "bundleName": "vela-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-vela-green.scss",
+                "bundleName": "vela-green",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-vela-orange.scss",
+                "bundleName": "vela-orange",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-vela-purple.scss",
+                "bundleName": "vela-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-fluent-light.scss",
+                "bundleName": "fluent-light",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-dark-blue.scss",
+                "bundleName": "lara-dark-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-dark-indigo.scss",
+                "bundleName": "lara-dark-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-dark-purple.scss",
+                "bundleName": "lara-dark-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-dark-teal.scss",
+                "bundleName": "lara-dark-teal",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-light-blue.scss",
+                "bundleName": "lara-light-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-light-indigo.scss",
+                "bundleName": "lara-light-indigo",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-light-purple.scss",
+                "bundleName": "lara-light-purple",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-lara-light-teal.scss",
+                "bundleName": "lara-light-teal",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-luna-amber.scss",
+                "bundleName": "luna-amber",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-luna-blue.scss",
+                "bundleName": "luna-blue",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-luna-pink.scss",
+                "bundleName": "luna-pink",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-luna-green.scss",
+                "bundleName": "luna-green",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-nova.scss",
+                "bundleName": "nova",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-nova-accent.scss",
+                "bundleName": "nova-accent",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-nova-alt.scss",
+                "bundleName": "nova-alt",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-rhea.scss",
+                "bundleName": "rhea",
+                "inject": false
+              },
+              {
+                "input": "src/theme/primeng-themes/theme-tailwind-light.scss",
+                "bundleName": "tailwind-light",
+                "inject": false
+              },
+              {
+                "input": "src/theme/soho-dark.scss",
+                "bundleName": "soho-dark",
+                "inject": false
+              },
+              {
+                "input": "src/theme/soho-light.scss",
+                "bundleName": "soho-light",
+                "inject": false
+              },
+              {
+                "input": "src/theme/viva-light.scss",
+                "bundleName": "viva-light",
+                "inject": false
+              },
+              {
+                "input": "src/theme/viva-dark.scss",
+                "bundleName": "viva-dark",
+                "inject": false
+              },
+              {
+                "input": "src/theme/nano.scss",
+                "bundleName": "nano",
+                "inject": false
+              },
+              {
+                "input": "src/theme/mira.scss",
+                "bundleName": "mira",
+                "inject": false
+              }
+            ],
+            "scripts": [
+              "node_modules/chart.js/dist/chart.js",
+              "node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js"
+            ],
+            "aot": false,
+            "vendorChunk": false,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": false
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "ci": {
+              "progress": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "app:build:production"
+            },
+            "ci": {}
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": [
+              {
+                "glob": "favicon.ico",
+                "input": "src/",
+                "output": "/"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              }
+            ]
+          },
+          "configurations": {
+            "ci": {
+              "progress": false,
+              "watch": false
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "app:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "app:serve:ci"
+            }
+          }
+        },
+        "ionic-cordova-build": {
+          "builder": "@ionic/angular-toolkit:cordova-build",
+          "options": {
+            "browserTarget": "app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "app:build:production"
+            }
+          }
+        },
+        "ionic-cordova-serve": {
+          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "options": {
+            "cordovaBuildTarget": "app:ionic-cordova-build",
+            "devServerTarget": "app:serve"
+          },
+          "configurations": {
+            "production": {
+              "cordovaBuildTarget": "app:ionic-cordova-build:production",
+              "devServerTarget": "app:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false,
+    "schematicCollections": [
+      "@ionic/angular-toolkit"
+    ]
+  },
+  "schematics": {
+    "@ionic/angular-toolkit:component": {
+      "styleext": "scss"
+    },
+    "@ionic/angular-toolkit:page": {
+      "styleext": "scss"
+    }
+  }
+}

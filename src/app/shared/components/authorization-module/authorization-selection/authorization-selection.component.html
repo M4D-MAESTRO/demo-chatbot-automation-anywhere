@@ -1,0 +1,61 @@
+<ion-content appScrollTheme>
+  <ng-container *ngIf="funcionalidades">
+    <div class="surface-card shadow-2 border-round flex-auto p-5">
+      <div class="text-900 font-semibold text-lg mt-3">Funcionalidades</div>
+      <p-divider></p-divider>
+      <div class="flex gap-5 flex-column-reverse md:flex-row">
+        <div class="flex-auto p-fluid">
+          <div *ngFor="let f of funcionalidades" class="mb-4 col-12 xl:col-3 md:col-6">
+            <p-checkbox name="group" [value]="f" [(ngModel)]="selectedFuncionalidades" [inputId]="f.id"></p-checkbox>
+            <label class="ml-2" [for]="f.id">{{ f.nome }}</label>
+            <div class="ml-3 cursor-pointer pi pi-question-circle" (click)="detailFuncionalidade(f)"></div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+              <label for="justificativa" class="font-medium text-900">Justificativa</label>
+              <input id="justificativa" type="text" formControlName="justificativa" pInputText>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Insira uma justificativa válida"
+                  *ngIf="isInputError('justificativa')"></p-message>
+              </div>
+            </form>
+          </div>
+          <div>
+            <button pButton pRipple label="Salvar" class="w-auto mt-3" (click)="salvar()"
+              [disabled]="disableCreateBtn()"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+
+  <p-dialog [(visible)]="showQuestionDialog" appendTo="body" [modal]="true" [draggable]="false"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center">
+        <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle"
+          style="width:32px;height:32px">
+          <i class="pi pi-info text-lg"></i>
+        </span>
+        <span class="font-medium text-2xl text-900">{{ questionTitle }}</span>
+      </div>
+    </ng-template>
+    <p class="line-height-3 p-0 m-0">
+      {{ questionDescription }}.
+    </p>
+    <ng-template pTemplate="footer">
+      <div class=" pt-3">
+        <button pButton pRipple icon="pi pi-check" (click)="showQuestionDialog = false" label="OK"></button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

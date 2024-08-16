@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>ADM. Geral</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content appScrollTheme>
+  <br />
+  <ion-segment class="background-segment" [(ngModel)]="currentTab" [ngModelOptions]="{standalone: true}"
+    (ionChange)="changeTab($event)">
+    <ion-segment-button style="margin-left: 5px; max-width: 200px" layout="icon-start" value="loja">
+      <ion-icon style="font-size: 1.2em" name="business-outline"></ion-icon>
+      <ion-label text-wrap class="wrap-text" style="font-size: 1.1em">
+        Filiais
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button style="max-width: 200px" layout="icon-start" value="despesa">
+      <ion-icon style="font-size: 1.2em" name="cash-outline"></ion-icon>
+      <ion-label style="font-size: 1.1em"> Despesas </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <br />
+
+  <div class="wall-background h-screen">
+    <ng-container *ngIf="currentTab === 'loja'">
+      <div style="max-width: 95%; margin: auto">
+        <app-loja-main></app-loja-main>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="currentTab === 'despesa'">
+      <div style="max-width: 95%; margin: auto">
+        <app-despesa-main></app-despesa-main>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>

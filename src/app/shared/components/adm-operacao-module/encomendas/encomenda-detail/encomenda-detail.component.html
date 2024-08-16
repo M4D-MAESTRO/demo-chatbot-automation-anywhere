@@ -1,0 +1,128 @@
+<ion-content appScrollTheme>
+
+  <div *ngIf="encomenda" class="surface-ground">
+    <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+      <div class="px-6 py-5">
+        <div class="surface-card p-4 shadow-2 border-round">
+          <div class="flex font-medium text-2xl text-900 mb-3 justify-content-between">
+            <span>Encomenda ID</span>
+            <button *ngIf="encomenda.comprovante" pButton pRipple icon="pi pi-download"
+              class="p-button-rounded cursor-pointer ml-auto" (click)="baixarComprovante()"></button>
+          </div>
+          <div class="text-500 mb-5">{{ encomenda.id }}</div>
+          <ul class="list-none p-0 m-0 border-top-1 border-300">
+            <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+              <div class="text-500 w-full md:w-2 font-medium">Código Rastreio</div>
+              <div class="text-900 w-full md:w-10">
+                <input id="codigo_rastreio" placeholder="Código de Rastreio" type="text" pInputText
+                  formControlName="codigo_rastreio" class="w-full">
+                <div class="flex mt-1 justify-content-end">
+                  <p-message severity="error" text="Pelo menos 3 dígitos"
+                    *ngIf="isInputError('codigo_rastreio')"></p-message>
+                </div>
+              </div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 flex-wrap">
+              <div class="text-500 w-full md:w-2 font-medium">NF do Rastreio</div>
+              <div class="text-900 w-full md:w-10 line-height-3">
+                <input id="nf_rastreio" placeholder="NF de Rastreio" type="text" pInputText
+                  formControlName="nf_rastreio" class="w-full">
+                <div class="flex mt-1 justify-content-end">
+                  <p-message severity="error" text="Pelo menos 3 dígitos"
+                    *ngIf="isInputError('nf_rastreio')"></p-message>
+                </div>
+              </div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+              <div class="text-500 w-full md:w-2 font-medium">Nome digitado do remetente</div>
+              <div class="text-900 w-full md:w-10">
+                <input id="nome_remetente" placeholder="Nome remetente na encomenda" type="text" pInputText
+                  formControlName="nome_remetente" class="w-full">
+                <div class="flex mt-1 justify-content-end">
+                  <p-message severity="error" text="Obrigatório/Pelo menos 3 dígitos"
+                    *ngIf="isInputError('nome_remetente')"></p-message>
+                </div>
+              </div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 flex-wrap ">
+              <div class="text-500 w-full md:w-2 font-medium">Usuário associado</div>
+              <div *ngIf="users" class="text-900 w-full md:w-10">
+                <p-dropdown id="user_associado_id" [options]="users.data" [filter]="true" placeholder="Selecione"
+                  [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" formControlName="user_associado_id"
+                  [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+                  filterBy="nome,cpf" styleClass="w-full" optionValue="id">
+                  <ng-template pTemplate="filter" let-options="options">
+                    <div class="flex p-3">
+                      <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                        <input #searchUser type="text" pInputText placeholder="Procurar">
+                        <button pButton pRipple icon="pi pi-search" (click)="paginarUser(searchUser)"></button>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="loader" let-options="options">
+                    <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                      <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                    </div>
+                  </ng-template>
+                  <ng-template let-user pTemplate="item">
+                    <div>
+                      <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                    </div>
+                  </ng-template>
+                  <ng-template let-user pTemplate="selectedItem">
+                    <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                  </ng-template>
+                </p-dropdown>
+                <div class="flex mt-1 justify-content-end">
+                  <p-message severity="error" text="Obrigatório" *ngIf="isInputError('user_associado_id')"></p-message>
+                </div>
+              </div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+              <div class="text-500 w-full md:w-2 font-medium">Status</div>
+              <div class="text-900 w-full md:w-10">{{ encomenda.status }}</div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 flex-wrap ">
+              <div class="text-500 w-full md:w-2 font-medium">Recebedor inicial</div>
+              <div class="text-900 w-full md:w-10">{{ encomenda.recebedor_inicial.nome }}</div>
+            </li>
+            <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+              <div class="text-500 w-full md:w-2 font-medium">Recebido em</div>
+              <div class="text-900 w-full md:w-10">{{ encomenda.created_at | date: 'dd/MM/yyyy -
+                HH:mm:ss' }}h</div>
+            </li>
+            <ng-container
+              *ngIf="encomenda.status == EncomendaStatus.RETIRADO_PROPRIO || encomenda.status == EncomendaStatus.RETIRADO_TERCEIRO">
+              <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                <div class="text-500 w-full md:w-2 font-medium">Recebedor final</div>
+                <div class="text-900 w-full md:w-10">{{ encomenda.recebedor_final?.nome || "Não informado" }}</div>
+              </li>
+              <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                <div class="text-500 w-full md:w-2 font-medium">Finalizado por</div>
+                <div class="text-900 w-full md:w-10">{{ encomenda.user_atualizou?.nome || "Não informado" }}</div>
+              </li>
+              <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                <div class="text-500 w-full md:w-2 font-medium">Finalizado em</div>
+                <div class="text-900 w-full md:w-10"> {{ encomenda.updated_at | date: 'dd/MM/yyyy -
+                  HH:mm:ss' }}h</div>
+              </li>
+            </ng-container>
+          </ul>
+          <div class="surface-border border-top-2 opacity-50 mb-2 mt-3"></div>
+          <div class="flex justify-content-end">
+            <button *ngIf="encomenda.status == EncomendaStatus.AGUARDANDO" pButton pRipple label="Salvar"
+              icon="pi pi-send" iconPos="right" class="w-auto" (click)="atualizar()"
+              [disabled]="disableCreateBtn()"></button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,32 @@
+<br>
+<div class="card">
+  <p-dataView *ngIf="isLoaded" emptyMessage="Nada encontrado, experimente escolher outra carga" class="data-container"
+  #dv [lazy]="true" [value]="despesas.data" [paginator]="true" [rows]="despesas.meta.take"
+  [totalRecords]="despesas.meta.itemCount" [pageLinks]="despesas.meta.pageCount" (onLazyLoad)="paginar($event)"
+  filterBy="nome" layout="list">
+  <ng-template pTemplate="header">
+    <div class="flex justify-content-end mb-2">
+      <p-button icon="pi pi-plus" label="Novo" (click)="createNew()">
+      </p-button>
+    </div>
+
+  </ng-template>
+    <ng-template let-despesa pTemplate="listItem">
+      <div *ngIf="isLoaded" #templateGrid class="col-12">
+        <div class="despesa-list-item">
+          <div class="despesa-list-detail">
+            <div class="despesa-name">{{ despesa.nome }}</div>
+            <div class="despesa-description">{{ despesa.descricao }}</div>
+          </div>
+          <div class="despesa-list-action">
+            <p-button icon="pi pi-pencil" label="Editar" (click)="editarDespesa(despesa)">
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>
+
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>

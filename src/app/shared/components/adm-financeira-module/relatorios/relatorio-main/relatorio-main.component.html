@@ -1,0 +1,50 @@
+<p-panel>
+  <ng-template pTemplate="header">
+    <p-dropdown [options]="reportList" placeholder="Selecione o relatório" [(ngModel)]="selectedReport"
+      [ngModelOptions]="{standalone: true}" optionLabel="label" optionValue="value"
+      (onChange)="handleReportDropChange($event.value)"></p-dropdown>
+  </ng-template>
+
+  <div class="p-fluid grid">
+
+    <ng-container *ngIf="selectedReport == 4">
+
+      <div class="p-float-label field col-12 md:col-4">
+        <p-dropdown [options]="sortLotericas" placeholder="Selecione uma Lotérica" optionLabel="label"
+          optionValue="value" (onChange)="loadOperadores($event.value)"></p-dropdown>
+      </div>
+
+      <div class="p-float-label field col-12 md:col-4">
+        <p-dropdown [options]="operadores" placeholder="Selecione um funcionário" [(ngModel)]="data.user_id"
+          [ngModelOptions]="{standalone: true}" optionLabel="nome" optionValue="id"></p-dropdown>
+      </div>
+
+      <div class="p-float-label field col-12 md:col-4">
+        <p-calendar [(ngModel)]="data.date" [ngModelOptions]="{standalone: true}" dateFormat="dd-mm-yy"
+          inputId="report_4_date"></p-calendar>
+        <label for="report_4_date">Data desejada</label>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedReport == 5">
+
+      <div class="p-float-label field col-12 md:col-4">
+        <p-dropdown [options]="sortLotericas" placeholder="Selecione uma Lotérica" optionLabel="label"
+        optionValue="value" [(ngModel)]="data.loterica_id"></p-dropdown>
+      </div>
+
+
+      <div class="p-float-label field col-12 md:col-4">
+        <p-calendar [(ngModel)]="data.date" [ngModelOptions]="{standalone: true}" dateFormat="dd-mm-yy"
+          inputId="report_5_inicio"></p-calendar>
+        <label for="report_5_inicio">Data desejada</label>
+      </div>
+    </ng-container>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button style="margin-left: 5px" pButton [disabled]="getDisabled()" icon="pi pi-download" class=" p-button-primary"
+      label="Baixar" (click)="reportDownload()">
+    </button>
+  </ng-template>
+</p-panel>

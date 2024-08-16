@@ -1,0 +1,43 @@
+<br>
+<div class="card main-view">
+  <ng-container *ngIf="isLoaded">
+    <p-dataView emptyMessage="Nada encontrado, experimente escolher outra carga" class="data-container" #dv
+      [lazy]="true" [value]="lojas.data" [paginator]="true" [rows]="lojas.meta.take"
+      [totalRecords]="lojas.meta.itemCount" [pageLinks]="lojas.meta.pageCount" (onLazyLoad)="paginar($event)"
+      filterBy="nome" layout="list">
+      <ng-template pTemplate="header">
+        <div class="flex justify-content-end mb-2">
+          <p-button icon="pi pi-plus" label="Novo" (click)="createNew()">
+          </p-button>
+        </div>
+      </ng-template>
+      <ng-template let-data pTemplate="listItem">
+        <div *ngIf="isLoaded" #templateGrid class="col-12">
+          <div class="data-list-item">
+            <div class="data-list-detail">
+              <div class="data-name">{{ data.codigo }} - {{ data.nome }}</div>
+              <div class="mt-1 mb-3">{{ data.descricao }}</div>
+              <i class="pi pi-map data-category-icon"></i><span class="data-category">{{data.endereco?.endereco ||
+                "Sem endereço cadastrado"}}</span>
+            </div>
+            <div class="data-list-action">
+              <p-button icon="pi pi-pencil" label="Editar" (click)="editarloja(data)">
+              </p-button>
+              <button pButton type="button" class="p-button-outlined" icon="pi pi-map" label="Endereço"
+                (click)="editarEndereco(data)">
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </ng-container>
+
+  <ng-container *ngIf="contentError.hasError">
+    <app-content-error  [erroCode]="contentError.code"></app-content-error>
+  </ng-container>
+</div>
+
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+</p-confirmDialog>

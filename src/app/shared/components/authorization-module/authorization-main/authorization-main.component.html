@@ -1,0 +1,133 @@
+<ion-content appScrollTheme>
+    <ng-container *ngIf="autorizacoes">
+        <div class="surface-overlay px-4 lg:px-6 py-4 px-4 lg:px-6 border-top-1 surface-border h-full">
+            <section class="flex flex-wrap gap-3 py-6 justify-content-between border-bottom-1 surface-border">
+                <div class="flex-shrink-0 w-15rem">
+                    <h3 class="mb-4 mt-0 text-900 font-medium text-xl">Autorizações</h3>
+                    <p class="mb-4 mt-0 text-700 font-normal text-base">Adicione/Remova autorizações do usuário</p>
+                    <button pButton pRipple label="Editar" class="w-auto" (click)="createNew()"></button>
+                </div>
+                <br>
+                <ng-container *ngIf="autorizacoes.length > 0">
+                    <div class="overflow-x-scroll">
+                        <p-table [value]="autorizacoes" [tableStyle]="{'min-width': '60rem'}" [rowHover]="true">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th><span class="font-semibold text-sm text-color-secondary">Autorização</span></th>
+                                    <th><span class="font-semibold text-sm text-color-secondary">Concedido em</span>
+                                    </th>
+                                    <th><span class="font-semibold text-sm text-color-secondary">Concessor</span></th>
+                                    <th></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-autorizacao>
+                                <tr>
+                                    <td>
+                                        <div class="flex align-items-center">
+                                            <span class="border-circle mr-2" style="width: 7px; height: 7px;"></span>
+                                            <p class="mt-0 mb-0 font-medium text-lg text-color-primary">
+                                                {{autorizacao.funcionalidade.nome}}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="mt-0 mb-0 font-normal text-base text-color-secondary">
+                                            {{autorizacao.created_at | date: 'dd/MM/yyyy -
+                                            HH:mm:ss'}}h
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <p class="mt-0 mb-0 font-normal text-base text-color-secondary">
+                                            {{autorizacao.user_registrou.nome}}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <button type="button" pButton icon="pi pi-ellipsis-v"
+                                            class="p-button-text p-button-secondary"
+                                            (click)="selectedAutorizacao = autorizacao; menu1.toggle($event)"></button>
+                                        <p-menu #menu1 appendTo="body" [popup]="true" [model]="menuItens"></p-menu>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="autorizacoes.length == 0">
+                    <app-attention-surface title="Atenção" subtitle="Vazio"
+                        [message]="'O usuário ' + user.nome + ' não possui autorizações explícitas'"></app-attention-surface>
+                </ng-container>
+            </section>
+        </div>
+    </ng-container>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+    </ion-toolbar>
+</ion-footer>
+
+<p-dialog [(visible)]="showDialog" appendTo="body" [modal]="true" [closable]="false" [draggable]="false"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '60vw'}">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center ">
+            <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle"
+                style="width:32px;height:32px">
+                <i class="pi pi-info text-lg"></i>
+            </span>
+            <span class="font-medium text-2xl text-900">Detalhamento</span>
+        </div>
+
+        <div class="flex align-items-center justify-content-end ml-auto cursor-pointer" (click)="closeDialog()">
+            <span
+                class="flex align-items-center justify-content-center bg-pink-100 text-pink-800 border-circle vertical-align-top"
+                style="width:24px;height:24px">
+                <i class="pi pi-times text-sm"></i>
+            </span>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+        <div class="surface-card p-4 shadow-2 border-round">
+            <div class="font-medium text-3xl text-900 mb-3">Detalhamento</div>
+            <div class="text-primary mb-5">{{ selectedAutorizacao.id }}</div>
+            <ul class="list-none p-0 m-0 border-top-1 surface-border">
+                <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                    <div class="text-500 w-full md:w-2 font-medium">Funcionalidade (nome)</div>
+                    <div class="text-900 w-full md:w-10">{{ selectedAutorizacao.funcionalidade.nome }}</div>
+                </li>
+                <li class="flex align-items-center py-3 px-2  flex-wrap surface-ground">
+                    <div class="text-500 w-full md:w-2 font-medium">Funcionalidade (Descrição)</div>
+                    <div class="text-900 w-full md:w-10">{{ selectedAutorizacao.funcionalidade.descricao }}</div>
+                </li>
+                <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                    <div class="text-500 w-full md:w-2 font-medium">Concessor (ID)</div>
+                    <div class="text-900 w-full md:w-10 ">{{ selectedAutorizacao.user_registrou.id }}
+                    </div>
+                </li>
+                <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                    <div class="text-500 w-full md:w-2 font-medium">Concessor (nome)</div>
+                    <div class="text-900 w-full md:w-10">{{ selectedAutorizacao.user_registrou.nome }}
+                    </div>
+                </li>
+                <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                    <div class="text-500 w-full md:w-2 font-medium">Concessor (email)</div>
+                    <div class="text-900 w-full md:w-10">{{ selectedAutorizacao.user_registrou.email }}
+                    </div>
+                </li>
+                <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+                    <div class="text-500 w-full md:w-2 font-medium ">Justificativa</div>
+                    <div class="text-900 w-full md:w-10">{{ selectedAutorizacao.justificativa }}
+                    </div>
+                </li>
+                <li class="flex align-items-center py-3 px-2 flex-wrap ">
+                    <div class="text-500 w-full md:w-2 font-medium ">Data de concessão</div>
+                    <div class="text-900 w-full md:w-10">{{ selectedAutorizacao.created_at | date: 'dd/MM/yyyy -
+                        HH:mm:ss'}}h
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </ng-template>
+
+</p-dialog>

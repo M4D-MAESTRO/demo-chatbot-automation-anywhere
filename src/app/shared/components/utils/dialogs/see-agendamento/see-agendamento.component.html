@@ -1,0 +1,119 @@
+<ng-container *ngIf="selectedPrestacaoServico">
+  <p-dialog [(visible)]="showDialog" appendTo="body" [modal]="true" [closable]="false" [draggable]="false"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '60vw'}">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center ">
+        <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle"
+          style="width:32px;height:32px">
+          <i class="pi pi-info text-lg"></i>
+        </span>
+        <span class="font-medium text-2xl text-900">{{ title }}</span>
+      </div>
+
+      <div class="flex align-items-center justify-content-end ml-auto cursor-pointer" (click)="close()">
+        <span
+          class="flex align-items-center justify-content-center bg-pink-100 text-pink-800 border-circle vertical-align-top"
+          style="width:24px;height:24px">
+          <i class="pi pi-times text-sm"></i>
+        </span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <div class="surface-card p-4 shadow-2 border-round">
+        <div class="font-medium text-3xl text-900 mb-3">Detalhamento</div>
+        <div class="text-primary mb-5">{{ selectedPrestacaoServico.id }}</div>
+        <ul class="list-none p-0 m-0 border-top-1 surface-border">
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Prestador</div>
+            <div class="text-900 w-full md:w-10">{{ selectedPrestacaoServico.colaborador.nome }}</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2  flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Cliente</div>
+            <div class="text-900 w-full md:w-10">{{ selectedPrestacaoServico.cliente.nome }}</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Total a ser pago:</div>
+            <div class="text-900 w-full md:w-10">{{ selectedPrestacaoServico.total_devido | currency:'BRL':'' }}</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Loja faturando</div>
+            <div class="text-900 w-full md:w-10">{{ selectedPrestacaoServico.loja.nome }}</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Adicionais</div>
+            <div class="text-900 w-full md:w-10">
+              <p-tag styleClass="mr-2 text-green-500 bg-green-100" [value]="selectedPrestacaoServico.pagamento_forma"
+                [rounded]="true"></p-tag>
+              <p-tag styleClass="mr-2 text-blue-500 bg-blue-100" [value]="selectedPrestacaoServico.status_servico"
+                [rounded]="true"></p-tag>
+              <p-tag styleClass="mr-2 text-orange-500 bg-orange-100" [value]="selectedPrestacaoServico.local"
+                [rounded]="true"></p-tag>
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Detalhe da ordem de serviço</div>
+            <div class="text-900 w-full md:w-10">
+              <div class="grid mt-0 mr-0">
+                <div *ngFor="let i of selectedPrestacaoServico.itens_prestacao_servico" class="col-12 md:col-6">
+                  <div class="p-3 border-1 surface-border border-round surface-card">
+                    <div class="text-900 mb-2">
+                      <ion-icon slot="start" icon="business-outline" class="mr-2"></ion-icon>
+                      <span class="font-medium">{{ i.servico.nome }}</span>
+                    </div>
+                    <div class="text-900 mb-2">
+                      <i class="pi pi-tag mr-2"></i>
+                      <span class="font-medium">{{ i.servico.descricao }}</span>
+                    </div>
+                    <div class="surface-200 mb-1 mt-1 " style="height:2px"></div>
+                    <ng-container>
+                      <div class="text-700 mb-1">Valor unitário: {{ i.valor_unitario | currency:'BRL':'' }}</div>
+                      <div class="text-700 mb-1">Quantidade: {{ i.quantidade }}</div>
+                      <div class="text-700">Sub total: {{ i.sub_total | currency:'BRL':'' }}</div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Resumo da ordem de serviço</div>
+            <div class="text-900 w-full md:w-10">
+              <div class="grid mt-0 mr-0">
+                <div class="col-12 md:col-6">
+                  <div class="p-3 border-1 surface-border border-round surface-card">
+                    <ng-container>
+                      <div class="text-700 mb-1">Total do serviço: {{ selectedPrestacaoServico.total_servico |
+                        currency:'BRL':'' }}</div>
+                      <div class="text-700 mb-1">Acréscimo/Desconto: {{ selectedPrestacaoServico.acrescimo_desconto |
+                        currency:'BRL':'' }}</div>
+                      <div class="text-700">Total a ser pago: {{ selectedPrestacaoServico.total_devido |
+                        currency:'BRL':'' }}</div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium ">Justificativa (desconto/acréscimo)</div>
+            <div class="text-900 w-full md:w-10">{{ selectedPrestacaoServico.descricao || 'N.A' }}</div>
+          </li>
+        </ul>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <!--
+        <button class="p-button-danger" type="button" pButton pRipple icon="pi pi-times" iconPos="right"
+        (click)="dialogCancel()" label="Cancelar"></button>
+      -->
+      <div class="mt-2">
+        <button class="" type="button" pButton pRipple icon="pi pi-external-link" iconPos="right"
+          (click)="dialogSeeEndereco()" label="Ver endereço"></button>
+        <button *ngIf="showUpdateButton()" class="" pButton type="button" pRipple icon="pi pi-pencil" iconPos="right" (click)="editPrestacao()"
+          label="Editar"></button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</ng-container>

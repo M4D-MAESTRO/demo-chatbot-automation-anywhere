@@ -1,0 +1,244 @@
+<ion-content appScrollTheme>
+
+  <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+    <div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
+      <div class="text-900 font-medium text-xl mb-1">Criar/Cadastrar</div>
+      <div class="surface-card p-4 shadow-2 border-round p-fluid">
+        <div class="grid formgrid p-fluid">
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="numero_rgi" class="font-medium text-900">RGI</label>
+            <input id="numero_rgi" placeholder="RGI" type="text" pInputText formControlName="numero_rgi">
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório/Apenas números/Pelo menos 6 dígitos"
+                *ngIf="isInputError('numero_rgi')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="numero_iptu" class="font-medium text-900">IPTU</label>
+            <input id="numero_iptu" placeholder="IPTU" type="text" pInputText formControlName="numero_iptu">
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório/Apenas números/Pelo menos 6 dígitos"
+                *ngIf="isInputError('numero_iptu')"></p-message>
+            </div>
+          </div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="numero_bloco" class="font-medium text-900">N° Bloco</label>
+            <input id="numero_bloco" placeholder="N° Bloco" type="text" pInputText formControlName="numero_bloco">
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório/Apenas números"
+                *ngIf="isInputError('numero_bloco')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="nome_bloco">Nome do Bloco</label>
+            <input id="nome_bloco" type="text" pInputText placeholder="Nome do Bloco" formControlName="nome_bloco" />
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Pelo menos 3 dígitos" *ngIf="isInputError('nome_bloco')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="apartamento_casa">Número do Apartamento/Casa</label>
+            <input id="apartamento_casa" type="text" pInputText placeholder="Número do Apartamento/Casa"
+              formControlName="apartamento_casa" />
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório/Apenas números"
+                *ngIf="isInputError('apartamento_casa')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+
+          <div *ngIf="preponentes1" class="col-12 field mb-5">
+            <label for="preponente1_id" class="text-900 font-medium mb-3">1° Preponente</label>
+            <p-dropdown id="preponente1_id" [options]="preponentes1.data" [filter]="true" placeholder="Selecione"
+              [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" formControlName="preponente1_id"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+              filterBy="nome,cpf" (onChange)="searchedUser = undefined; loadUsers(1, TipoMoradorEnum.PREPONENTE2)">
+              <ng-template pTemplate="filter" let-options="options">
+                <div class="flex p-3">
+                  <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                    <input #searchPreponente1 type="text" pInputText placeholder="Procurar">
+                    <button pButton pRipple icon="pi pi-search"
+                      (click)="paginarUser(searchPreponente1, TipoMoradorEnum.PREPONENTE1)"></button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="item">
+                <div>
+                  <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="selectedItem">
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('preponente1_id')"></p-message>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+
+          <div *ngIf="preponentes2" class="col-12 field mb-5">
+            <label for="preponente2_id" class="text-900 font-medium mb-3">2° Preponente</label>
+            <p-dropdown id="preponente2_id" [options]="preponentes2.data" [filter]="true" placeholder="Selecione"
+              [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" formControlName="preponente2_id"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+              [showClear]="true" filterBy="nome,cpf"
+              (onChange)="searchedUser = undefined; loadUsers(1, TipoMoradorEnum.PREPONENTE3)"
+              (onClear)="clearPreponentes3()">
+              <ng-template pTemplate="filter" let-options="options">
+                <div class="flex p-3">
+                  <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                    <input #searchPreponente2 type="text" pInputText placeholder="Procurar">
+                    <button pButton pRipple icon="pi pi-search"
+                      (click)="paginarUser(searchPreponente2, TipoMoradorEnum.PREPONENTE2)"></button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="item">
+                <div>
+                  <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="selectedItem">
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('preponente2_id')"></p-message>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+
+          <div *ngIf="preponentes3" class="col-12 field mb-5">
+            <label for="preponente3_id" class="text-900 font-medium mb-3">3° Preponente</label>
+            <p-dropdown id="preponente3_id" [options]="preponentes3.data" [filter]="true" placeholder="Selecione"
+              [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" formControlName="preponente3_id"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+              [showClear]="true" filterBy="nome,cpf">
+              <ng-template pTemplate="filter" let-options="options">
+                <div class="flex p-3">
+                  <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                    <input #searchPreponente3 type="text" pInputText placeholder="Procurar">
+                    <button pButton pRipple icon="pi pi-search"
+                      (click)="paginarUser(searchPreponente3, TipoMoradorEnum.PREPONENTE3)"></button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="item">
+                <div>
+                  <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="selectedItem">
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('preponente3_id')"></p-message>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+
+          <div *ngIf="inquilinos" class="col-12 field mb-5">
+            <label for="inquilino_id" class="text-900 font-medium mb-3">Inquilino</label>
+            <p-dropdown id="inquilino_id" [options]="inquilinos.data" [filter]="true" placeholder="Selecione"
+              [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" formControlName="inquilino_id"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+              filterBy="nome,cpf">
+              <ng-template pTemplate="filter" let-options="options">
+                <div class="flex p-3">
+                  <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                    <input #searchInquilino type="text" pInputText placeholder="Procurar">
+                    <button pButton pRipple icon="pi pi-search"
+                      (click)="paginarUser(searchInquilino, TipoMoradorEnum.INQUILINO)"></button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="item">
+                <div>
+                  <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="selectedItem">
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('preponente1_id')"></p-message>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+
+          <div *ngIf="proprietariosRepasse" class="col-12 field mb-5">
+            <label for="proprietario_repasse_id" class="text-900 font-medium mb-3">Proprietário de Repasse</label>
+            <p-dropdown id="proprietario_repasse_id" [options]="proprietariosRepasse.data" [filter]="true"
+              placeholder="Selecione" [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true"
+              formControlName="proprietario_repasse_id"
+              [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+              filterBy="nome,cpf">
+              <ng-template pTemplate="filter" let-options="options">
+                <div class="flex p-3">
+                  <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                    <input #searchProprietarioRepasse type="text" pInputText placeholder="Procurar">
+                    <button pButton pRipple icon="pi pi-search"
+                      (click)="paginarUser(searchProprietarioRepasse, TipoMoradorEnum.REPASSE)"></button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="loader" let-options="options">
+                <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                  <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="item">
+                <div>
+                  <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-user pTemplate="selectedItem">
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('preponente1_id')"></p-message>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+
+        </div>
+        <div class="flex justify-content-end">
+          <button pButton pRipple label="Salvar" icon="pi pi-send" iconPos="right" class="w-auto" (click)="create()"
+            [disabled]="disableCreateBtn()"></button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

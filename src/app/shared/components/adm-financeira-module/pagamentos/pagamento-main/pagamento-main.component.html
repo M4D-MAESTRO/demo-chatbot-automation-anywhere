@@ -1,0 +1,66 @@
+<br>
+<div class="card main-view">
+  <p-dataView *ngIf="pagamentos" emptyMessage="Nada encontrado, experimente escolher outro filtro"
+    class="data-container" #dv [lazy]="true" [value]="pagamentos.data" [paginator]="true" [rows]="pagamentos.meta.take"
+    [totalRecords]="pagamentos.meta.itemCount" [pageLinks]="pagamentos.meta.pageCount" (onLazyLoad)="paginar($event)"
+    filterBy="nome" layout="list">
+    <ng-template pTemplate="header">
+      <div class="flex grid formgrid p-fluid justify-content-between mb-2">
+        <div class="field mb-4 col-12 md:col-6 xl:col-3">
+          <p-multiSelect [options]="statusOptions" [(ngModel)]="selectedStatus" display="chip"
+            (onChange)="changeFiltro($event)" defaultLabel="Selecione"></p-multiSelect>
+        </div>
+
+        <div class="field mb-4 col-12 md:col-3 lg:col-2 xl:col-1">
+          <p-button icon="pi pi-plus" label="Novo" (click)="createNew()">
+          </p-button>
+        </div>
+      </div>
+
+
+      <div class="flex flex-column md:flex-row md:justify-content-center">
+        <span class="p-input-icon-right mb-2 md:mb-0 ">
+          <i class="pi pi-search cursor-pointer text-primary" (click)="search()"></i>
+          <input class="w-full" type="search" pInputText [(ngModel)]="searchedPlano"
+            [ngModelOptions]="{standalone: true}" placeholder="Buscar " (keyup.enter)="search()">
+        </span>
+
+      </div>
+    </ng-template>
+
+    <ng-template let-data pTemplate="listItem">
+      <div *ngIf="pagamentos" #templateGrid class="col-12">
+        <div class="data-list-item">
+          <div class="data-list-detail">
+            <div class="data-name">{{ data.id }}</div>
+            <div class="mt-1 mb-3">{{ data.operacao.nome }}</div>
+            <div class="mt-1">Status: {{ data.status }}</div>
+            <div class="mt-1">Solicitante: {{ data.solicitante.nome }}</div>
+            <div class="mt-1">Valor: {{ data.valor | currency:'BRL': '(R$)' }}</div>
+            <div class="mt-1">
+              <i class="pi pi-exclamation-triangle data-category-icon text-primary"></i>
+              <span class="data-category">Data de Vencimento:
+                {{data.data_vencimento | date: 'dd/MM/yyyy -
+                HH:mm:ss' }}h</span>
+            </div>
+          </div>
+          <div class="data-list-action">
+            <p-button icon="pi pi-search" label="Detalhar" (click)="detalhar(data)">
+            </p-button>
+
+            <button *ngIf="data.conta_original_url" pButton type="button" class="p-button-outlined"
+              icon="pi pi-download" label="Conta Original" (click)="downContaOriginal(data)">
+            </button>
+            <button *ngIf="data.comprovante_url" pButton type="button" class="p-button-outlined" icon="pi pi-download"
+              label="Comprovante" (click)="downComprovante(data)">
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>
+
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text">
+</p-confirmDialog>

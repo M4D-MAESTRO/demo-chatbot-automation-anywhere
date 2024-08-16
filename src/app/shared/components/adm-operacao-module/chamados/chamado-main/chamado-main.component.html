@@ -1,0 +1,201 @@
+<p-table *ngIf="chamados" #dt [(selection)]="selectedChamados" dataKey="id" [rowHover]="true"
+  [showCurrentPageReport]="true" [filterDelay]="2" [rowsPerPageOptions]="[5,10,25,50,100,250,500,1000]"
+  [globalFilterFields]="['nome','solicitante.nome', 'executor.nome', 'status']"
+  currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords} entradas" [lazy]="true"
+  [value]="chamados.data" [paginator]="true" [rows]="chamados.meta.take" [totalRecords]="chamados.meta.itemCount"
+  [pageLinks]="chamados.meta.pageCount" (onLazyLoad)="paginar($event, dt)" responsiveLayout="scroll">
+  <ng-template pTemplate="caption">
+    <div class="grid flex ">
+
+      <div class="table-header text-primary col-6">
+        Lista de chamados
+      </div>
+
+      <div class="col-6 justify-content-end text-right">
+        <button type="button" pButton icon="pi pi-plus" (click)="editMenu.toggle($event)"></button>
+        <p-menu #editMenu appendTo="body" [popup]="true" [model]="opcoesMenuItens"></p-menu>
+      </div>
+
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr class="text-center">
+
+      <th class="text-center">
+        <div class="flex justify-content-center align-items-center ">
+          <span>ID</span>
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text" field="id"
+            [pSortableColumnDisabled]="true" class="ml-auto" display="menu"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Observação Geral
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text"
+            field="observacao_geral" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Solicitante
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text"
+            field="solicitante" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Executor
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text"
+            field="executor" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Status
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" field="status"
+            matchMode="equals" display="menu" class="ml-auto">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-dropdown [ngModel]="value" [options]="filtros.status" (onChange)="filter($event.value)"
+                placeholder="Status">
+                <ng-template let-option pTemplate="item">
+                  <span class="font-light py-1 px-3 text-blue-500 hover:bg-blue-100" style="border-radius: 30px;"
+                    [ngClass]="{
+                      'ABERTO' : 'text-yellow-500 hover:bg-yellow-100', 
+                      'ANDAMENTO' : 'text-yellow-500 hover:bg-yellow-100', 
+                      
+                      'PENDENTE' : 'text-pink-500 hover:bg-pink-100', 
+
+                      'CANCELADO' : 'text-green-500 hover:bg-green-100', 
+                      'CONCLUIDO' : 'text-green-500 hover:bg-green-100'
+                    }[option.value]">{{option.label}}</span>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Tipo
+          <p-columnFilter field="tipo" matchMode="between" display="menu" [showMatchModes]="false"
+            [showOperator]="false" [showAddButton]="false" class="ml-auto">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-dropdown [ngModel]="value" [options]="filtros.tipo" (onChange)="filter($event.value)"
+                placeholder="Tipo">
+                <ng-template let-option pTemplate="item">
+                  <div class="mb-2">
+                    <span class="font-light px-2 " style="border-radius: 30px;">{{option.label}}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center w-12rem" pSortableColumn="created_at">
+        <div class="flex justify-content-between align-items-center text-center">
+          Data de Criação
+          <p-sortIcon field="created_at"></p-sortIcon>
+          <p-columnFilter type="date" field="created_at" class="mx-auto" matchMode="between" display="menu"
+            [showMatchModes]="false" [showOperator]="false" [showAddButton]="true" [appendTo]="body"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center w-12rem" pSortableColumn="closed_at">
+        <div class="flex justify-content-between align-items-center text-center">
+          Data de Fechamento
+          <p-columnFilter type="date" field="closed_at" class="ml-auto" matchMode="between" display="menu"
+            [showMatchModes]="false" [showOperator]="false" [showAddButton]="true"></p-columnFilter>
+        </div>
+      </th>
+      <th class="w-8rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr class="text-center">
+      <td class="text-center">
+        <span class="p-column-title">ID</span>
+        {{data.id}}
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Observação Geral</span>
+        <span class="image-text cursor-pointer">{{data.observacao_geral}}</span>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Solicitante</span>
+        <div class="cursor-pointer" (click)="opensolicitante(data.solicitante.id)">
+          <img *ngIf="data.solicitante" [src]="data.solicitante?.avatar_url || 'assets/imgs/outros/default-user.jpg'"
+            width="32" height="32" class="mr-1 border-circle border-2 border-primary" style="vertical-align: middle" />
+          <br><br>
+          <span class="image-text">{{data.solicitante.nome}}</span>
+        </div>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Executor</span>
+        <div class="cursor-pointer" (click)="openColaborador(data.executor.id)">
+          <img *ngIf="data.executor" [src]="data.executor?.avatar_url || 'assets/imgs/outros/default-user.jpg'"
+            width="32" height="32" class="mr-1 border-circle border-2 border-primary" style="vertical-align: middle" />
+          <br><br>
+          <span class="image-text">{{data.executor?.nome || 'Não definido'}}</span>
+        </div>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Status</span>
+        <span class="font-light py-1 px-3 text-blue-500 bg-blue-100" style="border-radius: 30px;" [ngClass]="{
+          'ABERTO' : 'text-yellow-900 hover:bg-yellow-50 bg-yellow-100', 
+                      'ANDAMENTO' : 'text-yellow-900 hover:bg-yellow-50 bg-yellow-100', 
+                      
+                      'PENDENTE' : 'text-pink-900 hover:bg-pink-50 bg-pink-100', 
+
+                      'CANCELADO' : 'text-green-900 hover:bg-green-50 bg-green-100', 
+                      'CONCLUIDO' : 'text-green-900 hover:bg-green-50 bg-green-100'
+        }[data.status]">{{data.status}}
+        </span>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Tipo</span>
+        <span class="image-text">{{data.tipo}}</span>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Data de criação</span>
+        {{data.created_at | date: 'dd/MM/yyyy -
+        HH:mm:ss' }}h
+      </td>
+      <td class="text-center">
+        <span class="p-column-title">Data de encerramento</span>
+        <span *ngIf="data.closed_at">{{data.closed_at | date: 'dd/MM/yyyy -
+          HH:mm:ss' }}h</span>
+        <span *ngIf="!data.closed_at">Não encerrado</span>
+      </td>
+      <td class="text-center">
+        <button pButton type="button" class="button-primary p-button-outlined" icon="pi pi-external-link"
+          (click)="selectedChamado = data; editChamados.toggle($event)"></button>
+        <p-menu #editChamados appendTo="body" [popup]="true" [model]="opcoesChamadoItens"></p-menu>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="12">
+        <div class="surface-ground px-4 py-4 md:px-6 lg:px-8 h-full">
+          <app-attention-surface title="Atenção" subtitle="Nenhum chamado encontrado"
+            message="Experimente trocar os filtros"></app-attention-surface>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

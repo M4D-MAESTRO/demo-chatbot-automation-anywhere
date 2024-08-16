@@ -1,0 +1,72 @@
+p {
+  text-align: center;
+  color: black;
+  padding: 1px 20px;
+  font-size: 0.8em;
+}
+.credicon {
+  font: bold 2px;
+  color: #2bc48a;
+  text-decoration: none;
+}
+
+.rodape {
+  text-align: center;
+}
+ 
+@media only screen and (max-width: 599px) {
+  img {
+    max-width: 300px;
+    max-height: 238px;
+  }
+}
+
+img {
+  display: flex;
+  width: 500px;
+  height: 396px;
+  align-self: center;
+  margin: auto;
+  padding: 10px;
+}
+
+a {
+  display: flex;
+  justify-content: center;
+}
+
+.border {
+  border-radius: 23px;
+  max-width: 600px;
+  margin: auto;
+  background-color: var(--ion-color-dark) !important;
+}
+
+.limiter {
+  max-width: 500px;
+  margin: auto;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+}
+
+/*
+ion-content {
+  --background: url("../../assets/Fundos/PC/1.jpg") no-repeat center center / cover !important;
+}
+*/
+ion-item {
+  --border-radius: 10px;
+}
+
+.logo-img{
+  width: 100px;
+  height: 100px;
+}

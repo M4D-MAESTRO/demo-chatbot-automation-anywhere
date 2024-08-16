@@ -1,0 +1,50 @@
+<p-dialog [(visible)]="showDialog" appendTo="body" [modal]="true" [closable]="false"
+  [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center">
+      <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle"
+        style="width:32px;height:32px">
+        <i class="pi pi-info text-lg"></i>
+      </span>
+      <span class="font-medium text-2xl text-900">Status do Serviço</span>
+    </div>
+  </ng-template>
+  <div class="grid">
+    <div class="col-12 border-top-1 surface-border pt-3  mt-2"></div>
+    <div class="col-12 lg:col-4 p-3 text-center">
+      <div class="shadow-2 surface-card p-3" style="border-radius: 12px">
+        <div class="flex align-items-center justify-content-between">
+          <div>
+            <span class="text-xl text-900 font-bold">Iniciado</span>
+            <p class="mt-2 mb-0 text-700 text-lg">Utilize esse status caso esteja iniciando a prestação de serviço imediatamente</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 lg:col-4 p-3 text-center">
+      <div class="shadow-2 surface-card p-3" style="border-radius: 12px">
+        <div class="flex align-items-center justify-content-between">
+          <div>
+            <span class="text-xl text-900 font-bold">Agendar</span>
+            <p class="mt-2 mb-0 text-700 text-lg">Utilize esse status caso vá agendar a prestação de serviço</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-12 lg:col-4 p-3 text-center">
+      <div class="shadow-2 surface-card p-3" style="border-radius: 12px">
+        <div class="flex align-items-center justify-content-between">
+          <div>
+            <span class="text-xl text-900 font-bold">Finalizado</span>
+            <p class="mt-2 mb-0 text-700 text-lg">Utilize esse status caso já tenha realizado a prestação de serviço</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple icon="pi pi-check" (click)="close()" label="OK"></button>
+  </ng-template>
+</p-dialog>

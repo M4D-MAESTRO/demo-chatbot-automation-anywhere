@@ -1,0 +1,49 @@
+<ion-content appScrollTheme>
+  <ng-container *ngIf="loja">
+    <form [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+      <div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
+        <div class="card mb-2">
+        </div>
+        <div class="text-900 font-medium text-xl mb-1">Atualizar</div>
+        <div class="surface-card p-4 shadow-2 border-round p-fluid">
+          <div class="grid formgrid p-fluid">
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="nome" class="font-medium text-900">Nome</label>
+              <input id="nome" type="text" pInputText formControlName="nome">
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('nome')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="codigo" class="font-medium text-900">Código</label>
+              <p-inputMask id="codigo" formControlName="codigo" mask="999">
+              </p-inputMask>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('codigo')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12">
+              <label for="descricao">Descrição</label>
+              <textarea id="descricao" class="h-auto" id="descricao" pInputTextarea [autoResize]="true" [rows]="5"
+                formControlName="descricao"></textarea>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('descricao')"></p-message>
+              </div>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+          <div class="flex justify-content-end">
+            <button pButton pRipple label="Atualizar" icon="pi pi-send" iconPos="right" class="w-auto"
+              (click)="update()" [disabled]="disableUpdateBtn()"></button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,55 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>ADM. T.I</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content appScrollTheme>
+  <div class="px-4 py-8 md:px-6 lg:px-8 h-full wall-background"
+    >
+    <div class="text-primary font-medium mb-3">Ferramentas</div>
+    <div class="text-900 text-2xl font-bold mb-3">Ferramentas complementar do sistema</div>
+    <div class="grid mt-7">
+
+      <div class="col-12 md:col-4">
+        <div class="shadow-1 p-5 surface-card text-center">
+          <div
+            class="border-circle surface-900 p-4 text-primary inline-flex justify-content-center align-items-center mb-4">
+            <fa-icon class="text-7xl" [icon]="['fas', 'bullseye']"></fa-icon>
+          </div>
+          <div class="text-900 font-medium text-xl mb-4">Swagger</div>
+          <div class="text-700 text-sm mb-4 line-height-3">Documentação da API disponível via Swagger.</div>
+          <button pButton pRipple label="Acessar" class="p-button-text font-bold" (click)="openSwagger()"></button>
+        </div>
+      </div>
+      
+      <div class="col-12 md:col-4">
+        <div class="shadow-1 p-5 surface-card text-center">
+          <div
+            class="border-circle surface-900 p-4 text-primary inline-flex justify-content-center align-items-center mb-4">
+            <fa-icon class="text-7xl" [icon]="['fab', 'watchman-monitoring']"></fa-icon>
+          </div>
+          <div class="text-900 font-medium text-xl mb-4">Status</div>
+          <div class="text-700 text-sm mb-4 line-height-3">Monitoramento da API.</div>
+          <button pButton pRipple label="Acessar" class="p-button-text font-bold" (click)="openStatus()"></button>
+        </div>
+      </div>
+      
+      <div class="col-12 md:col-4">
+        <div class="shadow-1 p-5 surface-card text-center">
+          <div
+            class="border-circle surface-900 p-4 text-primary inline-flex justify-content-center align-items-center mb-4">
+            <fa-icon class="text-7xl" [icon]="['far', 'file-code']"></fa-icon>
+          </div>
+          <div class="text-900 font-medium text-xl mb-4">Bull Dashboard</div>
+          <div class="text-700 text-sm mb-4 line-height-3">Dashboard dos JOBs executados em background</div>
+          <button pButton pRipple label="Acessar" class="p-button-text font-bold" (click)="openBullDashboard()"></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ion-content>

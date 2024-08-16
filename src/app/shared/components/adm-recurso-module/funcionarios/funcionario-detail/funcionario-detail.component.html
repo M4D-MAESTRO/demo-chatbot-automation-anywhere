@@ -1,0 +1,189 @@
+<ng-container *ngIf="!isModal">
+  <form *ngIf="perfis" [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+    <div class="surface-ground px-4 md:px-6 lg:px-8 mt-5">
+
+      <!--
+      <div class="flex flex-column align-items-center flex-or">
+        <img [src]="user?.avatar_url || 'assets/imgs/outros/default-user.jpg'"
+          class="h-10rem w-10rem border-circle border-2 border-primary mr-1 xl:mr-0 ml-3" />
+        <p-fileUpload #avatarFile id="avatar" mode="basic" name="avatar" accept="image/*" chooseLabel=" "
+          styleClass="p-button-rounded -mt-4 w-3rem" chooseIcon="pi pi-pencil" customUpload="true" [auto]="true"
+          (uploadHandler)="uploadFile($event, avatarFile)">
+        </p-fileUpload>
+      </div>
+      -->
+      <div class="text-900 font-medium text-xl mb-1">Atualizar</div>
+      <div class="surface-card p-4 shadow-2 border-round p-fluid">
+        <div class="grid formgrid p-fluid">
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="nome" class="font-medium text-900">Nome</label>
+            <input id="nome" placeholder="Nome" type="text" pInputText formControlName="nome">
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('nome')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="status_patrimonio">Status</label>
+            <p-dropdown [options]="sortStatus" placeholder="Status" formControlName="status" optionLabel="label"
+              optionValue="value"></p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('status')"></p-message>
+            </div>
+          </div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="tel1">Celular 1</label>
+            <p-inputMask id="tel1" placeholder="Celular do funcionário" formControlName="tel1" mask="(99)9 9999-9999">
+            </p-inputMask>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tel1')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="tel2">Celular 2</label>
+            <p-inputMask id="tel2" placeholder="Celular alternativo do funcionário" formControlName="tel2"
+              mask="(99)9 9999-9999">
+            </p-inputMask>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tel2')"></p-message>
+            </div>
+          </div>
+
+          <div class="field mb-4 col-12 md:col-6">
+            <label for="data_nascimento">Data de nascimento</label>
+            <p-calendar formControlName="data_nascimento" placeholder="Data de nascimento do funcionário"
+              [maxDate]="maxDate" [readonlyInput]="true" inputId="data_nascimento"></p-calendar>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('data_nascimento')"></p-message>
+            </div>
+          </div>
+          <div class="field mb-4 col-12">
+            <label for="descricao">Perfil</label>
+            <p-dropdown #dropdown_perfil [options]="perfis.data" placeholder="Selecione o perfil de acesso"
+              formControlName="perfil_id" optionLabel="nome">
+              <ng-template let-perfil pTemplate="item">
+                <div class="">
+                  <div>{{perfil.nome}}</div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                <div class="col-12 w-auto">
+                  <button *ngIf="perfis.meta.hasNextPage" pButton pRipple type="button" label="Carregar mais"
+                    (click)="lazyLoadPerfis(dropdown_perfil)" class="p-button-outlined p-button-rounded"></button>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <div class="flex mt-1 justify-content-end">
+              <p-message severity="error" text="Obrigatório" *ngIf="isInputError('perfil_id')"></p-message>
+            </div>
+          </div>
+          <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+        </div>
+        <div class="flex justify-content-end">
+          <button pButton pRipple label="Atualizar" icon="pi pi-send" iconPos="right" class="w-auto" (click)="update()"
+            [disabled]="disableUpdateBtn()"></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</ng-container>
+
+<ng-container *ngIf="isModal">
+
+  <ion-content appScrollTheme>
+    <form *ngIf="perfis" [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+      <div class="surface-ground px-4 md:px-6 lg:px-8 mt-5">
+
+        <!--
+        <div class="flex flex-column align-items-center flex-or ">
+          <img [src]="user?.avatar_url || 'assets/imgs/outros/default-user.jpg'"
+            class="h-10rem w-10rem border-circle border-2 border-primary mr-1 xl:mr-0 ml-3 " />
+          <p-fileUpload #avatarFile id="avatar" mode="basic" name="avatar" accept="image/*"
+            styleClass="p-button-rounded -mt-4 w-3rem  text-center" chooseIcon="pi pi-pencil" chooseLabel=" "
+            customUpload="true" [auto]="true" (uploadHandler)="uploadFile($event, avatarFile)">
+          </p-fileUpload>
+        </div>
+        -->
+        <div class="text-900 font-medium text-xl mb-1">Atualizar</div>
+        <div class="surface-card p-4 shadow-2 border-round p-fluid">
+          <div class="grid formgrid p-fluid">
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="nome" class="font-medium text-900">Nome</label>
+              <input id="nome" placeholder="Nome" type="text" pInputText formControlName="nome">
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('nome')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="status_patrimonio">Status</label>
+              <p-dropdown [options]="sortStatus" placeholder="Status" formControlName="status" optionLabel="label"
+                optionValue="value"></p-dropdown>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('status')"></p-message>
+              </div>
+            </div>
+
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="tel1">Celular 1</label>
+              <p-inputMask id="tel1" placeholder="Celular do funcionário" formControlName="tel1" mask="(99)9 9999-9999">
+              </p-inputMask>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tel1')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="tel2">Celular 2</label>
+              <p-inputMask id="tel2" placeholder="Celular alternativo do funcionário" formControlName="tel2"
+                mask="(99)9 9999-9999">
+              </p-inputMask>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tel2')"></p-message>
+              </div>
+            </div>
+
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="data_nascimento">Data de nascimento</label>
+              <p-calendar formControlName="data_nascimento" placeholder="Data de nascimento do funcionário"
+                [maxDate]="maxDate" [readonlyInput]="true" inputId="data_nascimento"></p-calendar>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('data_nascimento')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12">
+              <label for="descricao">Perfil</label>
+              <p-dropdown #dropdown_perfil [options]="perfis.data" placeholder="Selecione o perfil de acesso"
+                formControlName="perfil_id" optionLabel="nome">
+                <ng-template let-perfil pTemplate="item">
+                  <div class="">
+                    <div>{{perfil.nome}}</div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                  <div class="col-12 w-auto">
+                    <button *ngIf="perfis.meta.hasNextPage" pButton pRipple type="button" label="Carregar mais"
+                      (click)="lazyLoadPerfis(dropdown_perfil)" class="p-button-outlined p-button-rounded"></button>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('perfil_id')"></p-message>
+              </div>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+          </div>
+          <div class="flex justify-content-end">
+            <button pButton pRipple label="Atualizar" icon="pi pi-send" iconPos="right" class="w-auto"
+              (click)="update()" [disabled]="disableUpdateBtn()"></button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+    </ion-toolbar>
+  </ion-footer>
+</ng-container>

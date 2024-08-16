@@ -1,0 +1,126 @@
+<ion-content appScrollTheme>
+
+  <div class="surface-ground px-2 py-6 md:px-6 lg:px-6">
+    <div class="text-900 font-medium text-xl mb-1">Finalizar</div>
+
+
+    <div class="surface-ground">
+      <div class="grid formgrid p-fluid">
+
+        <div *ngIf="users" class="col-12 mt-2 mb-5">
+          <label for="user_associado_id" class="text-900 font-medium mb-3">Usuário retirando</label>
+          <p-dropdown id="user_associado_id" [options]="users.data" [filter]="true" placeholder="Selecione"
+            [virtualScroll]="true" [virtualScrollItemSize]="38" [lazy]="true" [(ngModel)]="selectedUser"
+            [ngModelOptions]="{standalone: true}" styleClass="mt-2"
+            [virtualScrollOptions]="{ showLoader: true, loading: loading, delay: 250 }" optionLabel="nome"
+            filterBy="nome,cpf">
+            <ng-template pTemplate="filter" let-options="options">
+              <div class="flex p-3">
+                <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                  <input #searchUser type="text" pInputText placeholder="Procurar">
+                  <button pButton pRipple icon="pi pi-search" (click)="paginarUser(searchUser)"></button>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="loader" let-options="options">
+              <div class="flex align-items-center py-2 px-3" style="height: 38px">
+                <p-skeleton [width]="options.even ? '60%' : '50%'" height="1rem"></p-skeleton>
+              </div>
+            </ng-template>
+            <ng-template let-user pTemplate="item">
+              <div>
+                <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+              </div>
+            </ng-template>
+            <ng-template let-user pTemplate="selectedItem">
+              <div>{{ user.nome }} - {{ user.cpf | cpfMask}}</div>
+            </ng-template>
+          </p-dropdown>
+          <div class="flex mt-1 justify-content-end">
+            <p-message severity="error" text="Obrigatório" *ngIf="isInputError('user_associado_id')"></p-message>
+          </div>
+        </div>
+
+        <div class="col-12 xl:col-4 p-3 cursor-pointer" (click)="enableSignPad = false; fileInput.click()">
+          <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
+            <div style="width:48px;height:48px;border-radius:10px"
+              class="bg-teal-100 inline-flex align-items-center justify-content-center mr-3">
+              <i class="pi pi-file-import text-teal-600 text-3xl"></i>
+            </div>
+            <div>
+              <span class="text-900 text-xl font-medium mb-2">Anexar Arquivo</span>
+              <p class="mt-1 mb-0 text-600 font-medium text-sm">Use essa opção para selecionar uma imagem</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 xl:col-4 p-3 cursor-pointer" (click)="enableSignPad = false; anexosService.takePhoto()">
+          <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
+            <div style="width:48px;height:48px;border-radius:10px"
+              class="bg-pink-100 inline-flex align-items-center justify-content-center mr-3">
+              <i class="pi pi-camera text-pink-600 text-3xl"></i>
+            </div>
+            <div>
+              <span class="text-900 text-xl font-medium mb-2">Tirar foto</span>
+              <p class="mt-1 mb-0 text-600 font-medium text-sm">Utilize essa opção para tirar uma foto</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 xl:col-4 p-3 cursor-pointer" (click)="anexosService.clearFile(); enableSignPad = true">
+          <div class="p-3 border-round shadow-2 flex align-items-center surface-card">
+            <div style="width:48px;height:48px;border-radius:10px"
+              class="bg-orange-100 inline-flex align-items-center justify-content-center mr-3">
+              <i class="pi pi-pencil text-orange-600 text-3xl"></i>
+            </div>
+            <div>
+              <span class="text-900 text-xl font-medium mb-2">Assinatura</span>
+              <p class="mt-1 mb-0 text-600 font-medium text-sm">Utilize essa opção para colhetar assinatura</p>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="anexosService.getFileSelectedName()">
+          <div class="col-12 mt-8	mx-auto w-20rem sm:w-30rem">
+            <div class="shadow-2 border-round surface-card mb-3 h-full flex-column justify-content-between flex">
+              <div class="p-4">
+                <div class="flex align-items-center">
+                  <span class="inline-flex border-circle align-items-center justify-content-center bg-green-100 mr-3"
+                    style="width:38px;height:38px">
+                    <i class="pi pi-check text-xl text-green-600"></i>
+                  </span>
+                  <span class="text-900 font-medium text-2xl">Comprovante anexado</span>
+                </div>
+                <p class="mt-0 mb-3 text-700 line-height-3 my-3">{{ anexosService.getFileSelectedName() }}</p>
+              </div>
+              <div class="px-4 py-3 surface-100 text-right flex justify-content-between">
+                <button pButton pRipple icon="pi pi-cloud-download" iconPos="left" label="Baixar"
+                  class="p-button-rounded p-button-outlined p-button-help" (click)="baixarComprovante()"></button>
+
+                <button pButton pRipple icon="pi pi-send" iconPos="right" label="Finalizar" class="p-button-rounded ml-2"
+                  (click)="finalizar()" [disabled]="disableCreateBtn()"></button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+
+    <ng-container *ngIf="enableSignPad">
+      <app-signature-pad (onSave)="enableSignPad = false"></app-signature-pad>
+    </ng-container>
+
+
+    <input class="ion-hide" #fileInput type="file" (change)="anexosService.uploadFile($event)" id="file-input"
+      accept="image/png, image/jpeg" />
+    <input class="ion-hide" #fileInput2 type="file" (change)="anexosService.uploadFile($event)" id="file-input"
+      accept="image/png, image/jpeg" />
+
+
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

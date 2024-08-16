@@ -1,0 +1,31 @@
+.notes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: 25px;
+    margin-right: 70px;
+    border: 1px groove var(--primary-color);
+    border-radius: 23px;
+}
+
+.notes * {
+    margin-left: 15px;
+}
+
+.notes h1,
+h2 {
+    flex: 0 1 100%;
+    font-family: muli, verdana, arial, helvetica, geneva, sans-serif;
+    color: var(--primary-color);
+}
+
+.notes li {
+    margin: 0 0 5px 0;
+}
+
+@media only screen and (max-width: 1000px) {
+    .notes {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+}

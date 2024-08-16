@@ -1,0 +1,431 @@
+<ion-app>
+  <ion-split-pane contentId="main-content" when="(max-width: 0px)">
+    <ion-menu (ionWillOpen)="ionWillOpen()" (ionDidClose)="ionDidClose()" contentId="main-content" type="overlay">
+      <ion-content appScrollTheme>
+        <ion-list id="inbox-list">
+          <ion-item>
+            <img class="system_logo" [src]="getSystemInfo().SYSTEM_LOGO" />
+            <ion-list-header>{{ getSystemInfo().SYSTEM_NAME }}</ion-list-header>
+          </ion-item>
+          <br />
+          <ion-note>{{ getSystemInfo().SYSTEM_NICKNAME }}</ion-note>
+
+          <div *ngFor="let p of appPages">
+            <ion-menu-toggle *ngIf="p.url">
+              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
+                routerLinkActive="active">
+                <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-outline'"></ion-icon>
+                <ion-label>{{ p.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+
+            <ion-item button *ngIf="p.children?.length > 0" (click)="p.open = !p.open" [class.active-parent]="p.open"
+              detail="false" lines="none">
+              <ion-icon slot="start" name="arrow-forward" *ngIf="!p.open"></ion-icon>
+              <ion-icon slot="start" name="arrow-down" *ngIf="p.open" color="primary"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+
+            <ion-list *ngIf="p.open">
+              <ion-menu-toggle>
+                <ion-item class="sub-item" *ngFor="let sub of p.children" routerDirection="root"
+                  [routerLink]="[sub.url]" lines="none" detail="false" routerLinkActive="active">
+                  <ion-icon slot="start" [ios]="sub.icon + '-outline'" [md]="sub.icon + '-outline'"></ion-icon>
+                  <ion-label>{{ sub.title }}</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ion-list>
+          </div>
+
+        </ion-list>
+        <ion-list id="labels-list">
+          <ion-list-header>Preferências</ion-list-header>
+          <ion-item button="true" lines="full" (click)="toggleThemes($event)">
+            <ion-icon slot="start" name="cog"></ion-icon>
+            <ion-label> Opções </ion-label>
+            <ion-icon slot="end" name="open-outline"></ion-icon>
+          </ion-item>
+          <ion-item lines="full">
+            <ion-icon slot="start" name="wifi-outline"></ion-icon>
+            <ion-label> Conexão real </ion-label>
+            <ion-badge [color]="statusSocketColor" slot="end">{{ getSocketConexao() }}</ion-badge>
+          </ion-item>
+          <br />
+          <ion-button color="primary" id="logout" size="small" expand="block" (click)="sincronizar()"
+            routerDirection="root" routerLinkActive="selected">
+            Sincronizar
+            <ion-icon slot="end" name="sync-outline"></ion-icon>
+          </ion-button>
+
+          <br />
+          <!--
+          <ion-button *ngIf="!deferredPrompt" color="dark" id="logout" size="small" expand="block"
+            (click)="installPwa()" routerDirection="root" routerLinkActive="selected">
+            Instalar APP
+            <ion-icon slot="end" name="download-outline"></ion-icon>
+          </ion-button>
+          <br />-->
+          <ion-button color="primary" id="logout" size="small" expand="block" (click)="logout()" routerDirection="root"
+            routerLinkActive="selected" [routerLink]="'login'" fill="outline">
+            Logout
+            <ion-icon slot="end" name="walk-outline"></ion-icon>
+          </ion-button>
+        </ion-list>
+
+      </ion-content>
+    </ion-menu>
+
+    <ion-router-outlet id="main-content"
+      [ngClass]="{'p-input-filled': appConfig.inputStyle === 'filled', 'p-ripple-disabled': !appConfig.ripple, 'layout-wrapper-dark': appConfig.dark}"></ion-router-outlet>
+
+  </ion-split-pane>
+</ion-app>
+
+
+<p-sidebar [(visible)]="visibleSidebar" position="right" class="layout-config" styleClass="p-sidebar-md">
+
+  <div class="config-title" style="margin-top:0">Escala do APP</div>
+  <div class="config-scale">
+    <button icon="pi pi-minus" type="button" pButton pRipple (click)="decrementScale()" class="p-button-text"
+      [disabled]="scale === scales[0]"></button>
+    <i class="pi pi-circle-on" *ngFor="let s of scales" [ngClass]="{'scale-active': s === scale}"></i>
+    <button icon="pi pi-plus" type="button" pButton pRipple (click)="incrementScale()" class="p-button-text"
+      [disabled]="scale === scales[scales.length - 1]"></button>
+  </div>
+
+  <div class="config-title">Estilo de entrada</div>
+  <div class="formgroup-inline">
+    <div class="field-radiobutton">
+      <p-radioButton name="inputstyle" value="outlined" [(ngModel)]="appConfig.inputStyle"
+        inputId="input_outlined"></p-radioButton>
+      <label for="input_outlined">Delineado</label>
+    </div>
+    <div class="field-radiobutton">
+      <p-radioButton name="inputstyle" value="filled" [(ngModel)]="appConfig.inputStyle"
+        inputId="input_filled"></p-radioButton>
+      <label for="input_filled">Preenchido</label>
+    </div>
+  </div>
+
+  <div class="config-title">Efeito de click</div>
+  <p-inputSwitch [(ngModel)]="appConfig.ripple"></p-inputSwitch>
+
+  <!--
+    <div class="config-title">Cor de fundo</div>
+    <p-inputSwitch [(ngModel)]="appConfig.backgrounColorOn" (onChange)="changeBackground($event)"></p-inputSwitch>
+-->
+
+  <div class="config-title">Claro com Azul</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'bootstrap4-light-blue', false)">
+        <img src="assets/imgs/themes/bootstrap4-light-blue.svg" alt="Bootstrap Light Blue" />
+      </button>
+      <span>Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'fluent-light', false)">
+        <img src="assets/imgs/themes/fluent-light.png" alt="Fluent Light" />
+      </button>
+      <span>Light</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-light-blue', false)">
+        <img src="assets/imgs/themes/lara-light-blue.png" alt="Lara Light Blue" />
+      </button>
+      <span>Lara Light Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'saga-blue', false)">
+        <img src="assets/imgs/themes/saga-blue.png" alt="Saga Blue" />
+      </button>
+      <span>Saga Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'viva-light', false)">
+        <img src="assets/imgs/themes/viva-light.svg" alt="Viva Light" />
+      </button>
+      <span>Viva Light</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'mira', false)">
+        <img src="assets/imgs/themes/mira.jpg" alt="Mira" />
+      </button>
+      <span>Mira</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'nano', false)">
+        <img src="assets/imgs/themes/nano.jpg" alt="Nano" />
+      </button>
+      <span>Nano</span>
+    </div>
+  </div>
+
+  <div class="config-title">Claro com Roxo</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'soho-light', false)">
+        <img src="assets/imgs/themes/soho-light.png" alt="Soho Light" />
+      </button>
+      <span>Soho Light (default)</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'bootstrap4-light-purple', false)">
+        <img src="assets/imgs/themes/bootstrap4-light-purple.svg" alt="Bootstrap Light Purple" />
+      </button>
+      <span>Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'tailwind-light', false)">
+        <img src="assets/imgs/themes/tailwind-light.png" alt="Tailwind Light" />
+      </button>
+      <span>Light</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'saga-purple', false)">
+        <img src="assets/imgs/themes/saga-purple.png" alt="Saga Purple" />
+      </button>
+      <span>Saga Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-light-purple', false)">
+        <img src="assets/imgs/themes/lara-light-purple.png" alt="Lara Light Purple" />
+      </button>
+      <span>Lara Light Purple</span>
+    </div>
+  </div>
+
+  <div class="config-title">Claro com Verde</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'saga-green', false)">
+        <img src="assets/imgs/themes/saga-green.png" alt="Saga Green" />
+      </button>
+      <span>Saga Green</span>
+    </div>
+  </div>
+
+  <div class="config-title">Claro com Laranja</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'saga-orange', false)">
+        <img src="assets/imgs/themes/saga-orange.png" alt="Saga Orange" />
+      </button>
+      <span>Saga Orange</span>
+    </div>
+  </div>
+
+  <div class="config-title">Claro com Verde-azulado</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-light-teal', false)">
+        <img src="assets/imgs/themes/lara-light-teal.png" alt="Lara Light Teal" />
+      </button>
+      <span>Lara Light Teal</span>
+    </div>
+  </div>
+
+  <div class="config-title">Claro com Índigo</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-light-indigo', false)">
+        <img src="assets/imgs/themes/lara-light-indigo.png" alt="Lara Light Indigo" />
+      </button>
+      <span>Lara Light Indigo</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'md-light-indigo', false)">
+        <img src="assets/imgs/themes/md-light-indigo.svg" alt="Material Light Indigo" />
+      </button>
+      <span>Indigo</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'md-light-deeppurple', false)">
+        <img src="assets/imgs/themes/md-light-deeppurple.svg" alt="Material Light Deep Purple" />
+      </button>
+      <span>Deep Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'mdc-light-indigo', false)">
+        <img src="assets/imgs/themes/md-light-indigo.svg" alt="Material Compact Light Indigo" />
+      </button>
+      <span>Indigo Compact</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'mdc-light-deeppurple', false)">
+        <img src="assets/imgs/themes/md-light-deeppurple.svg" alt="Material Compact Deep Purple" />
+      </button>
+      <span>Deep Purple Compact</span>
+    </div>
+  </div>
+
+  <p-divider class="w-full px-2 mb-3"></p-divider>
+
+  <div class="config-title">Escuro com Azul</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'bootstrap4-dark-blue', true)">
+        <img src="assets/imgs/themes/bootstrap4-dark-blue.svg" alt="Bootstrap Dark Blue" />
+      </button>
+      <span>Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-dark-blue', true)">
+        <img src="assets/imgs/themes/lara-dark-blue.png" alt="Lara Dark Blue" />
+      </button>
+      <span>Lara Dark Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'vela-blue', true)">
+        <img src="assets/imgs/themes/vela-blue.png" alt="Vela Blue" />
+      </button>
+      <span>Vela Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'arya-blue', true)">
+        <img src="assets/imgs/themes/arya-blue.png" alt="Arya Blue" />
+      </button>
+      <span>Arya Blue</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'viva-dark', true)">
+        <img src="assets/imgs/themes/viva-dark.svg" alt="Viva Dark" />
+      </button>
+      <span>Viva Dark</span>
+    </div>
+  </div>
+
+  <div class="config-title">Escuro com Roxo</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'soho-dark', true)">
+        <img src="assets/imgs/themes/soho-dark.png" alt="Soho Dark" />
+      </button>
+      <span>Soho Dark (default)</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'bootstrap4-dark-purple', true)">
+        <img src="assets/imgs/themes/bootstrap4-dark-purple.svg" alt="Bootstrap Dark Purple" />
+      </button>
+      <span>Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-dark-purple', true)">
+        <img src="assets/imgs/themes/lara-dark-purple.png" alt="Lara Dark Purple" />
+      </button>
+      <span>Lara Dark Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'vela-purple', true)">
+        <img src="assets/imgs/themes/vela-purple.png" alt="Vela Purple" />
+      </button>
+      <span>Vela Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'arya-purple', true)">
+        <img src="assets/imgs/themes/arya-purple.png" alt="Arya Purple" />
+      </button>
+      <span>Arya Purple</span>
+    </div>
+  </div>
+
+  <div class="config-title">Escuro com Verde</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'vela-green', true)">
+        <img src="assets/imgs/themes/vela-green.png" alt="Vela Green" />
+      </button>
+      <span>Vela Green</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'arya-green', true)">
+        <img src="assets/imgs/themes/arya-green.png" alt="Arya Green" />
+      </button>
+      <span>Arya Green</span>
+    </div>
+  </div>
+
+  <div class="config-title">Escuro com Laranja</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'vela-orange', true)">
+        <img src="assets/imgs/themes/vela-orange.png" alt="Vela Orange" />
+      </button>
+      <span>Vela Orange</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'arya-orange', true)">
+        <img src="assets/imgs/themes/arya-orange.png" alt="Arya Orange" />
+      </button>
+      <span>Arya Orange</span>
+    </div>
+  </div>
+
+  <div class="config-title">Escuro com Verde-azulado</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-dark-teal', true)">
+        <img src="assets/imgs/themes/lara-dark-teal.png" alt="Lara Dark Teal" />
+      </button>
+      <span>Lara Dark Teal</span>
+    </div>
+  </div>
+
+  <div class="config-title">Escuro com Índigo</div>
+  <div class="grid themes-grid">
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'lara-dark-indigo', true)">
+        <img src="assets/imgs/themes/lara-dark-indigo.png" alt="Lara Dark Indigo" />
+      </button>
+      <span>Lara Dark Indigo</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'md-dark-indigo', true)">
+        <img src="assets/imgs/themes/md-dark-indigo.svg" alt="Material Dark Indigo" />
+      </button>
+      <span>Indigo</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'md-dark-deeppurple', true)">
+        <img src="assets/imgs/themes/md-dark-deeppurple.svg" alt="Material Dark Deep Purple" />
+      </button>
+      <span>Deep Purple</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'mdc-dark-indigo', true)">
+        <img src="assets/imgs/themes/md-dark-indigo.svg" alt="Material Compact Dark Indigo" />
+      </button>
+      <span>Indigo Compact</span>
+    </div>
+    <div class="col-6 sm:col-3">
+      <button class="p-link" (click)="changeTheme($event, 'mdc-dark-deeppurple', true)">
+        <img src="assets/imgs/themes/md-dark-deeppurple.svg" alt="Material Compact Dark Deep Purple" />
+      </button>
+      <span>Deep Purple Compact</span>
+    </div>
+  </div>
+
+</p-sidebar>
+
+
+<p-toast key="main" position="top-right"></p-toast>
+<p-toast key="down" position="bottom-center"></p-toast>
+
+<p-toast position="center" key="confirmation-overlay" (onClose)="toastService.closeConfirmationOverlay()"
+  [baseZIndex]="5000">
+  <ng-template let-message pTemplate="message">
+    <div class="flex flex-column" style="flex: 1">
+      <div class="text-center">
+        <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+        <h4>{{message.summary}}</h4>
+        <p>{{message.detail}}</p>
+      </div>
+      <div class="grid p-fluid">
+        <div class="col-12">
+          <button type="button" pButton (click)="toastService.closeConfirmationOverlay()" label="OK"
+            class="p-button-success"></button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>

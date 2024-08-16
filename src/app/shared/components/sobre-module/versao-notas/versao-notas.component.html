@@ -1,0 +1,27 @@
+<div class="surface-50 px-4 py-4 md:px-6 lg:px-8">
+    <div *ngFor="let n of notas" class="notes mb-2 ">
+
+      <div class="px-2">
+        <h1>Versão: {{ n.versao }} - ({{ n.data_lancamento | date: 'dd/MM/yyyy' }})</h1>
+      <h2>Novas Features:</h2>
+      <ul>
+        <li *ngFor="let f of n.novas_features">
+          {{ f }}
+        </li>
+      </ul>
+      <h2>Melhorias:</h2>
+      <ul>
+        <li *ngFor="let m of n.melhorias">
+          {{ m }}
+        </li>
+      </ul>
+      <h2>Correções:</h2>
+      <ul>
+        <li *ngFor="let c of n.correcoes">
+          {{ c }}
+        </li>
+      </ul>
+      </div>
+
+    </div>
+</div> 

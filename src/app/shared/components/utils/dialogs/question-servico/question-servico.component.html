@@ -1,0 +1,48 @@
+
+
+<p-dialog *ngIf="selectedServico" [(visible)]="showDialog" appendTo="body" [modal]="true"  [closable]="false"
+[breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}" [draggable]="false">
+<ng-template pTemplate="header">
+  <div class="flex align-items-center">
+    <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle"
+      style="width:32px;height:32px">
+      <i class="pi pi-info text-lg"></i>
+    </span>
+    <span class="font-medium text-2xl text-900">{{ selectedServico.nome }}</span>
+  </div>
+</ng-template>
+<div class="grid">
+  <div class="col-12 line-height-3 p-0 m-1">
+    {{ selectedServico.descricao }}
+    <div class="mt-1">Pode ser realizado de maneira remota: {{ selectedServico.is_remoto ? 'Sim': 'Não' }}</div>
+    <div>Pode ser realizado à domicílio: {{ selectedServico.is_domicilio ? 'Sim': 'Não' }}</div>
+  </div>
+  <div class="col-12 border-top-1 surface-border pt-3  mt-2"></div>
+  <div class="col-12 lg:col-6 p-3 text-center">
+    <div class="shadow-2 surface-card p-3" style="border-radius: 12px">
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <span class="text-xl text-900 font-bold">R$ {{ selectedServico.custo_servico | currency:'BRL': ''
+            }}</span>
+          <p class="mt-2 mb-0 text-600 text-lg">Custo tabelado do serviço</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 lg:col-6 p-3 text-center">
+    <div class="shadow-2 surface-card p-3" style="border-radius: 12px">
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <span class="text-xl text-900 font-bold">R$ {{ selectedServico.preco_servico | currency:'BRL': ''
+            }}</span>
+          <p class="mt-2 mb-0 text-600 text-lg">Valor tabelado a ser cobrado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template pTemplate="footer">
+  <button pButton pRipple icon="pi pi-check" (click)="close()"
+    label="OK"></button>
+</ng-template>
+</p-dialog>

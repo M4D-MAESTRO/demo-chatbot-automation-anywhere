@@ -1,0 +1,20 @@
+<ion-content appScrollTheme>
+  <div *ngIf="data" class="surface-ground px-4 py-8 md:px-6 lg:px-8 ">
+    <div class="text-900 font-medium text-xl mb-1">Funcionamento de hierarquia</div>
+    <div class="surface-card p-4 shadow-2 border-round p-fluid ">
+      <div class="grid formgrid p-fluid text-cente justify-content-center">
+        <p-organizationChart [value]="data" styleClass="company">
+          <ng-template let-node pTemplate="person">
+            <div class="node-header p-corner-top">{{node.label}}</div>
+            <div class="node-content">
+              <div>{{node.data.nome}}</div>
+            </div>
+          </ng-template>
+        </p-organizationChart>
+      </div>
+      <div class="flex justify-content-end">
+        <button pButton pRipple label="OK" iconPos="right" class="w-auto" (click)="fechar()"></button>
+      </div>
+    </div>
+  </div>
+</ion-content>

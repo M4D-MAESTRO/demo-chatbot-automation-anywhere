@@ -1,0 +1,4 @@
+export enum FileTemplateCargas{
+    CARGA_PRODUTOS='CARGA_PRODUTOS',
+    CARGA_ESTOQUES='CARGA_ESTOQUES',
+}

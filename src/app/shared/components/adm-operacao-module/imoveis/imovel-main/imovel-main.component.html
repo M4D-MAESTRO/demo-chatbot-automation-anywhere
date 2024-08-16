@@ -1,0 +1,86 @@
+<div class="card main-view h-full">
+  <p-dataView *ngIf="isLoaded" emptyMessage="Nada encontrado, experimente escolher outro filtro" class="data-container"
+    #dv [lazy]="true" [value]="imoveis.data" [paginator]="true" [rows]="imoveis.meta.take"
+    [totalRecords]="imoveis.meta.itemCount" [pageLinks]="imoveis.meta.pageCount" (onLazyLoad)="paginar($event)"
+    filterBy="nome" layout="list">
+    <ng-template pTemplate="header">
+
+      <div class="flex grid formgrid p-fluid justify-content-between mb-2">
+        <!--
+        <div class="field  col-12 sm:col-6 xl:col-3">
+          <p-dropdown #dropdown_lojas [options]="sortLojas" placeholder="Loja" styleClass="w-full"
+            (onClear)="clearFilter($event)" (onChange)="changeLoja($event)" [showClear]="true">
+          </p-dropdown>
+        </div>
+        -->
+
+        <div class="field mb-2 col-12 sm:col-6 xl:col-3">
+          <p-dropdown #dropdown_filtro [options]="sortOptions" placeholder="Filtrar" (onChange)="changeFiltro($event)"
+            (onClear)="clearFilter($event)" [showClear]="true" styleClass="mb-2 md:mb-0 w-full"></p-dropdown>
+        </div>
+      </div>
+
+      <div class="flex grid formgrid p-fluid justify-content-between mb-2">
+        <div class="field col-12 sm:col-6 xl:col-3">
+          <button pButton pRipple class="sm:w-auto w-full p-button-outlined" icon="pi pi-times" label="Limpar filtros"
+            (click)="clearAllFilters($event, dropdown_lojas, dropdown_filtro)">
+          </button>
+        </div>
+        <div class="field col-12 sm:col-6 xl:col-3 text-right">
+          <button pButton pRipple class="sm:w-auto w-full " icon="pi pi-plus" label="Novo imóvel" (click)="createNew()">
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-column md:flex-row md:justify-content-center">
+        <span class="p-input-icon-right mb-2 md:mb-0 mt-2">
+          <i class="pi pi-search cursor-pointer text-primary" (click)="search()"></i>
+          <input class="w-full" type="search" pInputText [(ngModel)]="searchedImovel"
+            [ngModelOptions]="{standalone: true}" placeholder="Número do RGI, IPTU ou ID do imóvel"
+            (keyup.enter)="search()">
+        </span>
+      </div>
+
+    </ng-template>
+
+    <ng-template let-imovel pTemplate="listItem">
+      <div *ngIf="isLoaded" #templateGrid class="col-12">
+        <div class="data-list-item">
+          <!--
+            <div class="crop mb-2 md:mb-0 ">
+            <img class="border-circle border-2 border-primary" [src]="setUserImage(user)" [alt]="imovel.name" />
+          </div>
+          -->
+          <div class="data-list-detail">
+            <div class="data-name">{{ imovel.id }}</div>
+            <div class="data-description mt-2">RGI: {{ imovel.numero_rgi }}</div>
+            <div class="data-description mt-1">IPTU: {{ imovel.numero_iptu }}</div>
+
+            <div class="data-description mt-2">Bloco: {{ imovel.numero_bloco }}
+              <span *ngIf="imovel.nome_bloco">({{ imovel.nome_bloco }})</span>
+            </div>
+            <div class="data-description mt-1">AP/Casa: {{ imovel.apartamento_casa }}</div>
+
+            <div class="data-description mt-2">1° Preponente: {{ imovel.preponente1.nome }}</div>
+            <div class="data-description mt-1">2° Preponente: {{ imovel.preponente2?.nome || "Não há" }}</div>
+            <div class="data-description mt-1">3° Preponente: {{ imovel.preponente3?.nome || "Não há" }}</div>
+
+            <div class="data-description mt-2">Inquilino: {{ imovel.preponente1?.nome || "Não há" }}</div>
+
+            <div class="data-description mt-2">Proprietário de Repasse: {{ imovel.proprietario_repasse?.nome || "Não há"
+              }}</div>
+
+          </div>
+          <div class="data-list-action">
+            <button type="button" pButton icon="pi pi-cog" label="Opções"
+              (click)="selectedImovel = imovel; editMenu.toggle($event)"></button>
+            <p-menu #editMenu appendTo="body" [popup]="true" [model]="editMenuItens"></p-menu>
+
+            <button type="button" pButton icon="pi pi-id-card" label="Ficha"
+              class="p-button-outlined p-button-secondary" (click)="openFicha(imovel)"></button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>

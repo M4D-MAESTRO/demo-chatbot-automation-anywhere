@@ -1,0 +1,142 @@
+<ion-content appScrollTheme>
+  <ng-container *ngIf="stepIndex == 0">
+    <form *ngIf="perfis" [formGroup]="form" (ngSubmit)="$event.preventDefault()">
+      <div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
+        <div class="card mb-2">
+          <p-steps [activeIndex]="stepIndex" [model]="steps" [readonly]="true"></p-steps>
+        </div>
+        <div class="text-900 font-medium text-xl mb-1">Criar/Cadastrar</div>
+        <div class="surface-card p-4 shadow-2 border-round p-fluid">
+          <div class="grid formgrid p-fluid">
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="nome" class="font-medium text-900">Nome</label>
+              <input id="nome" placeholder="Nome" type="text" pInputText formControlName="nome">
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('nome')"></p-message>
+              </div>
+            </div>
+            <!--
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="senha" class="font-medium text-900">Senha</label>
+              <p-password id="senha" placeholder="Senha" formControlName="senha" [toggleMask]="true" [feedback]="false"
+                styleClass="p-password p-component p-inputwrapper p-input-icon-right"></p-password>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('senha')"></p-message>
+              </div>
+            </div>
+            -->
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="descricao">Email</label>
+              <input type="text" pInputText placeholder="Email do funcionário" formControlName="email" />
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('email')"></p-message>
+              </div>
+            </div>
+
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="descricao">CPF</label>
+              <p-inputMask placeholder="CPF do funcionário" formControlName="cpf" mask="999.999.999-99">
+              </p-inputMask>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('cpf')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="identidade">Identidade</label>
+              <input id="identidade" placeholder="RG do funcionário" type="text" pInputText
+                formControlName="identidade">
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório com no mínimo 7 caracteres e no máximo 11"
+                  *ngIf="isInputError('identidade')"></p-message>
+              </div>
+            </div>
+
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="tel1">Celular 1</label>
+              <p-inputMask id="tel1" placeholder="Celular do funcionário" formControlName="tel1" mask="(99)9 9999-9999">
+              </p-inputMask>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tel1')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="tel2">Celular 2</label>
+              <p-inputMask id="tel2" placeholder="Celular alternativo do funcionário" formControlName="tel2"
+                mask="(99)9 9999-9999">
+              </p-inputMask>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('tel2')"></p-message>
+              </div>
+            </div>
+
+            <div class="field mb-4 col-12 md:col-6">
+              <label for="data_nascimento">Data de nascimento</label>
+              <p-calendar formControlName="data_nascimento" placeholder="Data de nascimento do funcionário"
+                [maxDate]="maxDate" inputId="data_nascimento"></p-calendar>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('data_nascimento')"></p-message>
+              </div>
+            </div>
+            <div class="field mb-4 col-12">
+              <label for="descricao">Perfil</label>
+              <p-dropdown #dropdown_perfil [options]="perfis.data" placeholder="Selecione o perfil de acesso"
+                formControlName="perfil_id" optionLabel="nome" (onChange)="changePerfil($event)">
+                <ng-template let-perfil pTemplate="item">
+                  <div class="">
+                    <div>{{perfil.nome}}</div>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                  <div class="col-12 w-auto">
+                    <button *ngIf="perfis.meta.hasNextPage" pButton pRipple type="button" label="Carregar mais"
+                      (click)="lazyLoadPerfis(dropdown_perfil)" class="p-button-outlined p-button-rounded"></button>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('perfil_id')"></p-message>
+              </div>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+            <!--
+            <div class="field mb-4 col-12 justify-content-start">
+              <label for="condominio_id">condominio</label>
+              <span class="p-input-icon-right mb-2 mt-2 w-3">
+                <i class="pi pi-search cursor-pointer text-primary" (click)="searchcondominio()"></i>
+                <input type="search" pInputText [(ngModel)]="searchedcondominio" [ngModelOptions]="{standalone: true}"
+                  placeholder="Nome ou descrição" (keyup.enter)="searchcondominio(dropdown_condominio)">
+              </span>
+              <p-dropdown #dropdown_condominio [options]="condominios.data" placeholder="Qual condominio ele estará associado?"
+                formControlName="condominio_id" optionLabel="nome"></p-dropdown>
+              <p-paginator [value]="condominios.data" [paginator]="true" [rows]="condominios.meta.take"
+                [totalRecords]="condominios.meta.itemCount" [pageLinks]="condominios.meta.pageCount"
+                (onPageChange)="paginarCondominios($event, dropdown_condominio)">
+              </p-paginator>
+              <div class="flex mt-1 justify-content-end">
+                <p-message severity="error" text="Obrigatório" *ngIf="isInputError('condominio_id')"></p-message>
+              </div>
+            </div>
+            <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+            -->
+
+          </div>
+          <div class="flex justify-content-end">
+            <button pButton pRipple label="Próximo" icon="pi pi-send" iconPos="right" class="w-auto" (click)="create()"
+              [disabled]="disableCreateBtn()"></button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-container *ngIf="stepIndex == 1">
+    <app-endereco [idOf]="createdUserId" [isFuncionario]="true" (createdEvent)="listenEndereco($event)"></app-endereco>
+  </ng-container>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

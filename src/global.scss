@@ -1,0 +1,490 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+/** Padronização para animação de borda **/
+
+.border-animated {
+  background: var(--ion-holder-border);
+  background-size: 200% 200%;
+  animation: borderAnimation 4s ease-in-out infinite;
+
+  width: 358px;
+  height: 428px;
+  margin: 0 auto !important;
+}
+
+@keyframes borderAnimation {
+  0% {
+    background-position: 0 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+/** Posicionamento de Toast (Ionic) **/
+
+.toastAfterHeader {
+  .toast-wrapper {
+    transform: translateY(100px) !important;
+  }
+}
+
+/** Personalização do tamanho dos Modais **/
+
+.modal-size-80 {
+  align-items: center;
+  justify-content: center;
+  --min-height: 80%;
+  --min-width: 80%;
+}
+
+.modal-transparent {
+  --ion-background-color: transparent;
+  --backdrop-background-color: transparent;
+}
+
+.modal-size-100 {
+  align-items: center;
+  justify-content: center;
+  --min-height: 100%;
+  --min-width: 100%;
+}
+
+.modal-size-transacao-request .modal-wrapper {
+  position: absolute;
+  display: block;
+  max-height: 370px;
+  max-width: 80%;
+}
+
+/** Padronização de CARDs Ionic **/
+
+.card-ipp {
+  --color: white !important;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+
+  width: 350px;
+  height: 420px;
+  margin: 0 auto !important;
+
+  --background: var(--ion-card-background);
+}
+
+.card-ipp:hover {
+  cursor: pointer;
+  background: rgba(65, 65, 65, 0.801);
+
+  img {
+    transform: scale(0.8);
+  }
+}
+
+.card-ipp img {
+  max-width: 250px;
+  max-height: 250px;
+  transition: transform 0.2s;
+  /* Animation */
+  padding: 5px 10px;
+  margin: auto;
+}
+
+.card-ipp ion-card-title {
+  --color: white !important;
+}
+
+.card-ipp ion-card-content {
+  --color: white !important;
+  margin-top: 5px;
+}
+
+.card-ipp ion-card-title {
+  font-weight: bold;
+}
+
+/** Padronização para Splitter **/
+
+.card-splitter {
+  --color: white !important;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+
+  min-height: 245px;
+
+  margin: 0 auto !important;
+
+  --background: var(--ion-card-background);
+
+  font-size: 2vh;
+}
+
+.card-splitter:hover {
+  cursor: pointer;
+  background: rgba(65, 65, 65, 0.801);
+
+  img {
+    transform: scale(0.8);
+  }
+}
+
+.card-splitter .card-margin-top {}
+
+.card-splitter img {
+  max-width: 500px !important;
+  max-height: 500px !important;
+  transition: transform 0.2s;
+  /* Animation */
+  padding: 5px 10px;
+  margin: auto;
+}
+
+.card-splitter ion-card-title {
+  --color: white !important;
+  font-size: 3vh;
+}
+
+.card-splitter ion-card-content {
+  --color: white !important;
+  margin-top: 5px;
+  font-size: 2.3vh;
+}
+
+.card-splitter ion-card-title {
+  font-weight: bold;
+}
+
+.splitter-container {
+  height: 90%;
+  width: 90%;
+  margin: 5px auto;
+}
+
+.background-icon {
+  margin-top: 25px;
+  font-size: 48px;
+}
+
+ion-title {
+  margin-right: 30px;
+  line-height: 55px;
+  background: url("assets/imgs/logos/Stand FTW - Icon - NO BG.png") no-repeat right center;
+  background-size: 50px;
+}
+
+ion-item {
+  --border-color: var(--text-color) !important;
+}
+
+ion-list {
+  border-bottom-color: var(--text-color) !important;
+}
+
+.default-form {
+  width: 90%;
+  margin: auto;
+  margin-top: 5vh;
+
+  .border {
+    border: 3px groove var(--border-color-outline);
+    border-radius: 23px;
+    background: var(--back-ground-form);
+  }
+
+  .limiter {
+    max-width: 90%;
+    margin: auto;
+  }
+
+  .p-dropdown {
+    width: 100% !important;
+  }
+
+  .p-inputtextarea {
+    height: 100% !important;
+    width: 100% !important;
+  }
+
+  .change-disabled-color {
+    .ng-pristine {
+      .p-filled {
+        background-color: var(--same-line) !important;
+        border: none !important;
+        color: var(--border-color-outline) !important;
+      }
+
+      background-color: var(--same-line) !important;
+      border: none !important;
+      color: var(--border-color-outline) !important;
+    }
+  }
+
+  .p-dropdown-filter {
+    width: 100% !important;
+  }
+
+  p-inputmask {
+    width: 100% !important;
+  }
+
+  .p-inputmask {
+    width: 100% !important;
+  }
+
+  .p-inputtext {
+    width: 100% !important;
+  }
+
+  p-password {
+    max-height: 37px !important;
+  }
+
+  .p-password {
+    width: 100% !important;
+    max-height: 37px !important;
+  }
+
+  .btn-end {
+    text-align: end !important;
+
+    p-button .p-button {
+      min-width: 150px !important;
+    }
+
+    margin-top: 5px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .btn-start {
+    text-align: start !important;
+
+    p-button .p-button {
+      min-width: 150px !important;
+    }
+
+    margin-top: 5px !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+.default-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
+.perfil-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+}
+
+.p-toast-detail {
+  white-space: pre-line;
+}
+
+.main-view {
+  .data-container {
+
+    .center {
+      text-align: center;
+    }
+
+    .p-dropdown {
+      width: 14rem;
+      font-weight: normal;
+    }
+
+    .data-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+
+    .data-category-icon {
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    .data-category {
+      font-weight: 600;
+      vertical-align: middle;
+    }
+
+    .data-list-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      width: 100%;
+
+      .crop {
+        height: 150px;
+        overflow: hidden;
+      }
+
+      .crop img {
+        width: 150px;
+        margin: 0px 0px 0px 0px;
+      }
+
+      img {
+        width: 150px;
+        height: 150px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        margin-right: 2px;
+      }
+
+      .data-list-detail {
+        margin-left: 10px;
+        flex: 1 1 0;
+      }
+
+      .p-rating {
+        margin: 0 0 0.5rem 0;
+      }
+
+      .data-price {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        align-self: flex-end;
+      }
+
+      .data-list-action {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .p-button {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .main-view {
+    .data-list-item {
+      img {
+        margin-right: 2rem;
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+  .main-view {
+    .data-list-item {
+      flex-direction: column;
+      align-items: center;
+
+      img {
+        width: 75%;
+        margin-right: 0;
+        margin: 2rem 0;
+      }
+
+      .data-list-detail {
+        text-align: center;
+      }
+
+      .data-price {
+        align-self: center;
+      }
+
+      .data-list-action {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .data-list-action {
+        margin-top: 2rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.wall-background {
+  /* Propriedades de fundo padrão */
+  background: none;
+}
+
+.wall-background.gradient {
+  /* Propriedades de fundo com gradiente */
+  background: radial-gradient(69.84% 69.84% at 50% 100%, var(--primary-color) 0%, var(--surface-ground) 100%);
+}
+
+.container-hierarquico-default .p-organizationchart {
+  .p-nivel {
+    padding: 0;
+    border: 0 none;
+  }
+
+  .node-header,
+  .node-content {
+    padding: .5em .7rem;
+  }
+
+  .node-header {
+    background-color: var(--primary-color);
+    color: #ffffff;
+  }
+
+  .node-content {
+    text-align: center;
+    border: 1px solid var(--primary-color);
+  }
+
+  .node-content img {
+    border-radius: 50%;
+  }
+
+  .org-chart-scrollable {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+.disable-primeng-list-control {
+  .p-orderlist-controls {
+    display: none;
+  }
+}

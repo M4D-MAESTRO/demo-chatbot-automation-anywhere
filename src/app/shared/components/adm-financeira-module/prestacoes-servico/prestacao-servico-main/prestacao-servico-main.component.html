@@ -1,0 +1,226 @@
+<p-table *ngIf="prestacoesServico" #dt [(selection)]="selectedPrestacoesServico" dataKey="id" [rowHover]="true"
+  [showCurrentPageReport]="true" [filterDelay]="2" [rowsPerPageOptions]="[5,10,25,50,100,250,500,1000]"
+  [globalFilterFields]="['nome','cliente.nome', 'vendedor.nome', 'status']"
+  currentPageReportTemplate="Mostrando {first} até {last} de {totalRecords} entradas" [lazy]="true"
+  [value]="prestacoesServico.data" [paginator]="true" [rows]="prestacoesServico.meta.take"
+  [totalRecords]="prestacoesServico.meta.itemCount" [pageLinks]="prestacoesServico.meta.pageCount"
+  (onLazyLoad)="paginar($event, dt)" responsiveLayout="scroll">
+  <ng-template pTemplate="caption">
+    <div class="grid flex">
+
+      <div class="table-header text-primary col-6">
+        Lista de Prestações
+      </div>
+
+      <div class="col-6 justify-content-end text-right">
+        <button type="button" pButton pRipple icon="pi pi-file-o" (click)="exportCsv()" class="p-button-help mr-2"
+          pTooltip="CSV" tooltipPosition="bottom"></button>
+
+        <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+          class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+
+        <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-danger mr-2"
+          pTooltip="PDF" tooltipPosition="bottom"></button>
+      </div>
+
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          ID
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text" field="id"
+            [pSortableColumnDisabled]="true" class="ml-auto" display="menu"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Loja
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text"
+            field="loja" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Cliente
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text"
+            field="cliente" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Colaborador
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="text"
+            field="colaborador" display="menu" class="ml-auto"></p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Total da Prestação
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" type="numeric"
+            field="total_devido" display="menu" currency="BRL" class="ml-auto" [showClearButton]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <div class="grid  justify-content-between">
+                <div class="field col-6 text-center">
+                  <label for="minmax-buttons">Mínimo (R$)</label>
+                  <p-inputNumber mode="decimal" [showButtons]="true" buttonLayout="vertical" spinnerMode="vertical"
+                    inputId="vertical" decrementButtonClass="button-secondary" incrementButtonClass="button-secondary"
+                    incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="0" [(ngModel)]="min_total"
+                    [minFractionDigits]="2" [maxFractionDigits]="2">
+                  </p-inputNumber>
+                </div>
+
+                <div class="field  col-6 text-center">
+                  <label for="minmax-buttons">Max (R$)</label>
+                  <p-inputNumber mode="decimal" [showButtons]="true" buttonLayout="vertical" spinnerMode="vertical"
+                    inputId="vertical" decrementButtonClass="button-secondary" incrementButtonClass="button-secondary"
+                    incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [min]="min_total"
+                    [(ngModel)]="max_total" [minFractionDigits]="2" [maxFractionDigits]="2">
+                  </p-inputNumber>
+                </div>
+              </div>
+              <div>
+                <button pButton type="button" class="button-primary p-button-outlined w-full" label="Limpar"
+                  (click)="clearTotal()"></button>
+              </div>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Status
+          <p-columnFilter [showAddButton]="false" [showMatchModes]="false" [showOperator]="false" field="status"
+            matchMode="equals" display="menu" class="ml-auto">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-dropdown [ngModel]="value" [options]="sortStatus" (onChange)="filter($event.value)"
+                placeholder="Status">
+                <ng-template let-option pTemplate="item">
+                  <span class="font-light py-1 px-3 text-blue-500 bg-blue-100 hover:bg-blue-100" style="border-radius: 30px;"
+                    [ngClass]="{
+                      'CANCELADO' : 'text-pink-500 bg-pink-100', 
+                      'INICIADO' : 'text-yellow-500 bg-yellow-100', 
+                      'FINALIZADO' : 'text-green-500 bg-green-100'
+                    }[option.value]">{{option.label}}</span>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center">
+        <div class="flex justify-content-between align-items-center">
+          Local
+          <p-columnFilter field="local" matchMode="between" display="menu" [showMatchModes]="false"
+            [showOperator]="false" [showAddButton]="false" class="ml-auto">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-dropdown [ngModel]="value" [options]="sortLocais" (onChange)="filter($event.value)"
+                placeholder="Local">
+                <ng-template let-option pTemplate="item">
+                  <div class="mb-2">
+                    <span class="font-light px-2 " style="border-radius: 30px;">{{option.label}}</span>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+            </ng-template>
+          </p-columnFilter>
+        </div>
+      </th>
+
+      <th class="text-center" pSortableColumn="created_at">
+        <div class="flex justify-content-between align-items-center text-center">
+          Data de Criação
+          <p-sortIcon field="created_at"></p-sortIcon>
+          <p-columnFilter type="date" field="created_at" display="menu" class="ml-auto" matchMode="between"
+            display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false"></p-columnFilter>
+        </div>
+      </th>
+      <th style="width: 8rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data>
+    <tr>
+      <td class="text-center">
+        <span class="p-column-title">ID</span>
+        {{data.id}}
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Loja</span>
+        <span class="image-text cursor-pointer">{{data.loja.nome}}</span>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Cliente</span>
+        <div class="cursor-pointer" (click)="openCliente(data.cliente.id)">
+          <img *ngIf="data.cliente" [src]="data.cliente?.avatar_url || 'assets/imgs/outros/default-user.jpg'" width="32"
+            height="32" class="mr-1 border-circle border-2 border-primary" style="vertical-align: middle" />
+          <br><br>
+          <span class="image-text">{{data.cliente.nome}}</span>
+        </div>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Colaborador</span>
+        <div class="cursor-pointer" (click)="openColaborador(data.colaborador.id)">
+          <img *ngIf="data.vendedor" [src]="data.colaborador?.avatar_url || 'assets/imgs/outros/default-user.jpg'"
+            width="32" height="32" class="mr-1 border-circle border-2 border-primary" style="vertical-align: middle" />
+          <br><br>
+          <span class="image-text">{{data.colaborador.nome}}</span>
+        </div>
+      </td>
+
+      <td class="text-center">
+        {{data.total_devido | currency:'BRL':'R$'}}
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Status</span>
+        <span class="font-light py-1 px-3 text-blue-500 bg-blue-100" style="border-radius: 30px;" [ngClass]="{
+          'CANCELADO' : 'text-pink-500 bg-pink-100', 
+          'INICIADO' : 'text-yellow-500 bg-yellow-100', 
+          'FINALIZADO' : 'text-green-500 bg-green-100'
+        }[data.status_servico]">{{data.status_servico}}
+        </span>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Local</span>
+        <span class="font-light py-1 px-3 text-blue-500 bg-blue-100" style="border-radius: 30px;">{{data.local}}</span>
+      </td>
+
+      <td class="text-center">
+        <span class="p-column-title">Data de criação</span>
+        {{data.created_at | date: 'dd/MM/yyyy'}}
+      </td>
+      <td class="text-center">
+        <button pButton type="button" class="button-primary p-button-outlined" icon="pi pi-external-link"
+          (click)="detail(data)"></button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="12">
+        <div class="surface-ground px-4 py-4 md:px-6 lg:px-8 h-full">
+          <div
+            style="background: radial-gradient(50% 109137.91% at 50% 50%, rgba(233, 203, 30, 0.1) 0%, rgba(254, 253, 244, 0) 100%);"
+            class="text-center">
+            <span class="bg-surface-50 text-yellow-500 font-bold text-2xl inline-block px-3">Atenção</span>
+          </div>
+          <div class="mt-6 mb-5 font-bold text-6xl text-900 text-center">Nenhuma prestação encontrada</div>
+          <p class="text-700 text-3xl mt-0 mb-6 text-center">Experimente trocar os filtros.</p>
+
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

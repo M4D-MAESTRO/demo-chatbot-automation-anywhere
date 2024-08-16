@@ -1,0 +1,197 @@
+<ion-content appScrollTheme>
+
+  <div *ngIf="chamado" class="surface-ground">
+    <div class="px-6 py-5">
+      <div class="surface-card p-4 shadow-2 border-round">
+        <div class="flex font-medium text-2xl text-900 mb-3 justify-content-between">
+          <span>Chamado: <span class="text-700 ">{{ chamado.id }}</span></span>
+        </div>
+        <div class="text-200 mb-5">{{ chamado.status }}</div>
+
+        <ul class="list-none p-0 m-0 border-top-1 border-300">
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Observação Geral</div>
+            <div class="text-900 w-full md:w-10">{{ chamado.observacao_geral }}</div>
+          </li>
+
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap">
+            <div class="text-500 w-full md:w-2 font-medium">Data de abertura</div>
+            <div class="text-900 w-full md:w-10 line-height-3">{{ chamado.created_at | date: 'dd/MM/yyyy -
+              HH:mm:ss' }}h</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Tempo decorrido</div>
+            <div class="text-900 w-full md:w-10 line-height-3">{{ chamado.tempo_decorrido }}</div>
+          </li>
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Tempo esperado (em horas)</div>
+            <div class="text-900 w-full md:w-10 line-height-3">{{ chamado.tempo_sla || "Não informado" }}
+              <span *ngIf="chamado.tempo_sla"> horas</span>
+            </div>
+          </li>
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Tipo</div>
+            <div class="text-900 w-full md:w-10 line-height-3">{{ chamado.tipo }}</div>
+          </li>
+          <li class="flex align-items-center py-3 px-2 flex-wrap">
+            <div class="text-500 w-full md:w-2 font-medium">Empresa</div>
+            <div class="text-900 w-full md:w-10">{{ chamado.nome_empresa || 'Não se aplica' }}</div>
+          </li>
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Detalhamentos</div>
+            <div class="text-900 w-full md:w-10">
+              <div class="grid mt-0 mr-0">
+                <div class="col-12">
+                  <p-panel header="Descrições do serviço" [collapsed]="true" [toggleable]="true">
+                    <div *ngFor="let t of chamado.descricoes_servico" class="mt-3 pt-1">
+                      <p class="flex justify-content-between">{{ t }}
+                      </p>
+                      <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+                    </div>
+                    <div *ngIf="isEmptyList(chamado.descricoes_servico)" class="mt-3 pt-1">
+                      <app-attention-surface title="Atenção" subtitle="Vazio"
+                        message="Sem descrições do serviço"></app-attention-surface>
+                    </div>
+                  </p-panel>
+                </div>
+                <div class="col-12 ">
+                  <p-panel header="Produtos utilizados" [collapsed]="true" [toggleable]="true">
+                    <div *ngFor="let t of chamado.produtos_utilizados" class="mt-3 pt-1">
+                      <p class="flex justify-content-between">{{ t }}
+                      </p>
+                      <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+                    </div>
+                    <div *ngIf="isEmptyList(chamado.produtos_utilizados)" class="mt-3 pt-1">
+                      <app-attention-surface title="Atenção" subtitle="Vazio"
+                        message="Sem produtos utilizados"></app-attention-surface>
+                    </div>
+                  </p-panel>
+                </div>
+                <div class="col-12">
+                  <p-panel header="Observações do serviço" [collapsed]="true" [toggleable]="true">
+                    <div *ngFor="let t of chamado.observacoes_servico" class="mt-3 pt-1">
+                      <p class="flex justify-content-between">{{ t }}
+                      </p>
+                      <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+                    </div>
+                    <div *ngIf="isEmptyList(chamado.observacoes_servico)" class="mt-3 pt-1">
+                      <app-attention-surface title="Atenção" subtitle="Vazio"
+                        message="Sem produtos utilizados"></app-attention-surface>
+                    </div>
+                  </p-panel>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Executor</div>
+            <ng-container *ngIf="chamado.executor">
+              <div class="text-900 w-full md:w-10 line-height-3">{{ chamado.executor.nome }} - {{ chamado.executor.cpf |
+                cpfMask }}
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!chamado.executor">
+              <div class="text-900 w-full md:w-10 line-height-3">Não identificado</div>
+            </ng-container>
+          </li>
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap surface-ground">
+            <div class="text-500 w-full md:w-2 font-medium">Info de Fechamento</div>
+            <div class="text-900 w-full md:w-10">
+              <div class="grid mt-0 mr-0">
+                <ng-container *ngIf="chamado.closed_at">
+                  <div class="col-12 md:col-6">
+                    <div class="p-3 border-1 surface-border border-round surface-card">
+                      <div class="text-900 mb-2">
+                        <span class="font-medium">Data de fechamento</span>
+                      </div>
+                      <div class="text-700">{{ chamado.closed_at | date: 'dd/MM/yyyy -
+                        HH:mm:ss' }}h</div>
+                    </div>
+                  </div>
+                  <div class="col-12 md:col-6">
+                    <div class="p-3 border-1 surface-border border-round surface-card">
+                      <div class="text-900 mb-2">
+                        <span class="font-medium">Duração</span>
+                      </div>
+                      <div class="text-700">{{ chamado.tempo_decorrido }}</div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 md:col-6">
+                    <div class="p-3 border-1 surface-border border-round surface-card">
+                      <div class="text-900 mb-2">
+                        <span class="font-medium">Encerrante</span>
+                      </div>
+                      <ng-container *ngIf="chamado.encerrante">
+                        <div class="text-700">{{ chamado.encerrante.nome }} - {{ chamado.encerrante.cpf | cpfMask }}
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="!chamado.encerrante">
+                        <div class="text-700">Não identificado</div>
+                      </ng-container>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <p-panel header="Anotações de fechamento" [collapsed]="true" [toggleable]="true">
+                      <div *ngFor="let t of chamado.anotacoes_fechamento" class="mt-3 pt-1">
+                        <p class="flex justify-content-between">{{ t }}
+                        </p>
+                        <div class="surface-border border-top-1 opacity-50 mb-4 col-12"></div>
+                      </div>
+                      <div *ngIf="isEmptyList(chamado.anotacoes_fechamento)" class="mt-3 pt-1">
+                        <app-attention-surface title="Atenção" subtitle="Vazio"
+                          message="Sem anotações"></app-attention-surface>
+                      </div>
+                    </p-panel>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="!chamado.closed_at">
+                  <div class="col-12 md:col-6">
+                    <div class="p-3 border-1 surface-border border-round surface-card">
+                      <div class="text-900 mb-2">
+                        <span class="font-medium">Chamado ainda não encerrado</span>
+                      </div>
+                      <div class="text-700">O chamado está {{ chamado.status }} ainda</div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </li>
+
+          <li class="flex align-items-center py-3 px-2 flex-wrap ">
+            <div class="text-500 w-full md:w-2 font-medium">Foto</div>
+            <ng-container *ngIf="chamado.foto_url">
+              <div class="text-900 w-full md:w-10 line-height-3">
+                <div class="field mb-4 col-12 md:col-8 ">
+                  <div class="border-2 border-primary w-25rem h-15rem my-auto">
+                    <p-image [src]="currentFoto.file_url" alt="Image" width="400" height="230"
+                      [preview]="true"></p-image>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="!chamado.foto_url">
+              <div class="text-900 w-full md:w-10 line-height-3">Não anexada</div>
+            </ng-container>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="full" color="danger" (click)="fechar()">Fechar</ion-button>
+  </ion-toolbar>
+</ion-footer>

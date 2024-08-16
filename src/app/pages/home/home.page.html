@@ -1,0 +1,146 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content appScrollTheme>
+  <ng-container *ngIf="user">
+    <div class="flex flex-column flex-auto wall-background py-2 h-screen">
+      <div class="surface-section p-5">
+        <div (click)="openPerfil()" class="flex align-items-start flex-column lg:flex-row 
+        lg:justify-content-between cursor-pointer">
+          <div class="flex align-items-start flex-column md:flex-row">
+            <img [src]="user.avatar_url" class="mr-5 mb-3 lg:mb-0 default-avatar border-1 border-primary" />
+            <div>
+              <span class="text-900 font-medium text-3xl">{{ user.nome }}</span>
+              <div class="flex align-items-center flex-wrap text-sm">
+                <div class="mr-5 mt-3">
+                  <span class="font-medium text-500">Filial</span>
+                  <div class="text-700 mt-2">{{ user.filial?.nome || "Sem filial definida" }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 lg:mt-0">
+            <span class="font-medium text-500">{{ user.perfil.nome }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="surface-border border-top-1 opacity-50 col-12"></div>
+
+      <div class="p-5">
+        <div class="grid">
+          <ng-container *ngIf="simplesDash">
+
+            <div class="col-12 lg:col-4 xl:col-4">
+              <div class="surface-card shadow-2 p-3 border-1 border-50 border-round">
+                <div class="flex justify-content-between mb-3">
+                  <div>
+                    <span class="block text-500 font-medium mb-3">Chamados</span>
+                    <div class="text-900 font-medium text-xl">Total: 0</div>
+                  </div>
+                  <div class="flex align-items-center justify-content-center bg-blue-100 border-round cursor-pointer"
+                    style="width:2.5rem;height:2.5rem" (click)="goToPDV()">
+                    <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                  </div>
+                </div>
+                <span class="text-blue-500 font-medium">Quantidade: </span>
+                <span class="text-500">0</span>
+              </div>
+            </div>
+          </ng-container>
+
+
+          <div id="notificacoes" class="col-12 md:col-6">
+            <div class="surface-card shadow-2 border-round p-4">
+              <div class="flex align-items-center justify-content-between mb-3">
+                <div class="text-900 font-medium text-xl">Notificações</div>
+                <div>
+                  <button pButton pRipple icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded"
+                    (click)="menu.toggle($event)"></button>
+                  <p-menu #menu [popup]="true" [model]="itemsNotificacao" appendTo="body"></p-menu>
+                </div>
+              </div>
+
+              <ng-container *ngIf="notificacoes">
+                <ul class="list-none p-0 m-0">
+                  <li *ngFor="let n of notificacoes"
+                    class="py-3 border-bottom-1 surface-border flex md:align-items-start md:justify-content-between flex-column md:flex-row">
+                    <div class="flex align-items-start mr-0 lg:mr-5">
+                      <button pButton pRipple type="button" [icon]="getNotificacaoIcon(n)"
+                        class="p-button-rounded p-button-secondary p-button-text mr-3 mt-4"></button>
+                      <div>
+                        <span class="text-900 font-medium block mb-2">{{ n.nome }}</span>
+                        <div class="text-700 mb-2"> {{ n.descricao }}</div>
+                        <a [ngClass]="{
+                          'warning' : 'text-yellow-500', 
+                        'danger' : 'text-pink-500', 
+                        'info' : 'text-blue-500', 
+                        'success' : 'text-green-500'
+                      }[n.status]">
+                          <span>{{ n.status | convertStatus }}</span>
+                        </a>
+                      </div>
+                    </div>
+                    <span class="block text-500 font-medium ml-7 md:ml-5 mt-2 md:mt-0">{{ n.created_at | timeSince
+                      }}</span>
+                  </li>
+                </ul>
+              </ng-container>
+
+              <ng-container *ngIf="!notificacoes || notificacoes.length == 0">
+                <div class="border-circle border-1 border-primary">
+                  <app-attention-surface title="Atenção" subtitle="Vazio"
+                    message="Nenhuma notificação encontrada"></app-attention-surface>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+
+          <div id="outros" class="col-12  md:col-6">
+            <div class="surface-card shadow-2 border-round p-4">
+              <div class="flex justify-content-between align-items-center mb-5">
+                <span class="text-xl text-900 font-medium">Outros</span>
+                <div>
+                  <button pButton pRipple icon="pi pi-ellipsis-v" class="p-button-text p-button-plain p-button-rounded"
+                    (click)="mor.toggle($event)"></button>
+                  <p-menu #mor [popup]="true" [model]="itemsUsers" appendTo="body"></p-menu>
+                </div>
+              </div>
+              <!--
+              <ul class="list-none p-0 m-0">
+                <li *ngFor="let u of moradores.data;"
+                  class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
+                  <div class="flex">
+                    <div>
+                      <span class="block text-900 font-medium mb-1">{{ u.nome }}</span>
+                    </div>
+                  </div>
+                  <div class="mt-2 md:mt-0 flex flex-nowrap">
+
+                   
+                    <button pButton pRipple class="p-button-text p-button-plain p-button-rounded mr-1"
+                      icon="pi pi-envelope" (click)="goToSendEmail(u)"></button>
+                      <button pButton pRipple class="p-button-text p-button-plain p-button-rounded mr-1"
+                      icon="pi pi-comment"></button>
+                    <button pButton pRipple class="p-button-text p-button-plain p-button-rounded mr-1"
+                      icon="pi pi-external-link" (click)="openMembro(u)"></button>
+                   
+                  </div>
+                </li>
+              </ul>
+              <p-paginator [rows]="moradores.meta.take" [totalRecords]="moradores.meta.itemCount"
+                [pageLinkSize]="moradores.meta.pageCount" (onPageChange)="paginarMorador($event)"></p-paginator>
+                 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ion-content>

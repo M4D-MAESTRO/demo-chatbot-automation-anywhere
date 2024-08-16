@@ -1,0 +1,21 @@
+[
+    {
+        "versao": "1.0.0",
+        "data_lancamento": "2022-07-15T18:34:29.240Z",
+        "novas_features": [
+            "string1",
+            "tring 2",
+            "ign 3"
+        ],
+        "melhorias": [
+            "string1",
+            "tring 2",
+            "ign 3"
+        ],
+        "correcoes": [
+            "string1",
+            "tring 2",
+            "ign 3"
+        ]
+    }
+]

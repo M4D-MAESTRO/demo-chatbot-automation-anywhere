@@ -1,0 +1,13 @@
+<div class="mt-5 mb-1">
+  <div class="signature-pad-container">
+    <canvas class="signature-pad-canvas" #canvas width="900" height="400" style="touch-action: none;"></canvas>
+  </div>
+</div>
+
+<div class="my-2 flex justify-content-end">
+  <ion-buttons slot="end">
+    <ion-button expand="full" [disabled]="isCanvasBlank()" (click)="save()">Salvar</ion-button>
+    <ion-button expand="full" (click)="undo()">Refazer</ion-button>
+    <ion-button expand="full" (click)="clear()">Limpar</ion-button>
+  </ion-buttons>
+</div>

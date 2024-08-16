@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>ADM. Recursos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content appScrollTheme>
+  <br />
+  <ion-segment class="background-segment" [(ngModel)]="currentTab" [ngModelOptions]="{standalone: true}"
+    (ionChange)="changeTab($event)">
+    <ion-segment-button style="margin-left: 5px; max-width: 200px" layout="icon-start" value="funcionario">
+      <ion-icon style="font-size: 1.2em" name="people-outline"></ion-icon>
+      <ion-label text-wrap class="wrap-text" style="font-size: 1.1em">
+        Funcionários
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button style="max-width: 200px" layout="icon-start" value="patrimonio">
+      <ion-icon style="font-size: 1.2em" name="desktop-outline"></ion-icon>
+      <ion-label style="font-size: 1.1em"> Patrimônios </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <br />
+
+  <div class="wall-background h-screen">
+    <ng-container *ngIf="currentTab === 'funcionario'">
+      <div style="max-width: 95%; margin: auto">
+        <app-funcionario-main></app-funcionario-main>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="currentTab === 'patrimonio'">
+      <div style="max-width: 95%; margin: auto">
+        <app-patrimonio-main></app-patrimonio-main>
+      </div>
+    </ng-container>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,12 @@
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8">
+    <div class="border-top-1 opacity-50 border-primary"></div>
+    <div class="flex flex-column lg:flex-row justify-content-center align-items-center gap-4 ">
+        <div class="text-center lg:text-right">
+            <div class="mt-6 mb-3 font-bold text-4xl text-900">{{ contentError.title }}</div>
+            <p class="text-700 text-2xl mt-0 mb-6">{{ contentError.message }}</p>
+            <button pButton type="button" label="Voltar para casa" class="p-button-outlined"
+                (click)="goHome()"></button>
+        </div>
+        <img [src]="getErrorImg()" alt="Image" class="xl:w-25rem lg:w-20rem md:w-15rem sm:w-20rem">
+    </div>
+</div>

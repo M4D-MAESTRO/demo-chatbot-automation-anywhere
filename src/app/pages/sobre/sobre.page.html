@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Sobre</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content appScrollTheme>
+  <br />
+  <ion-segment class="background-segment" [(ngModel)]="currentTab" [ngModelOptions]="{standalone: true}"
+    (ionChange)="changeTab($event)">
+    <ion-segment-button style="margin-left: 5px; max-width: 200px" layout="icon-start" value="geral">
+      <ion-icon style="font-size: 1.2em" name="information-circle-outline"></ion-icon>
+      <ion-label text-wrap class="wrap-text" style="font-size: 1.1em">
+        Geral
+      </ion-label>
+    </ion-segment-button>
+
+    <ion-segment-button style="margin-left: 5px; max-width: 200px" layout="icon-start" value="notas">
+      <ion-icon style="font-size: 1.2em" name="desktop-outline"></ion-icon>
+      <ion-label text-wrap class="wrap-text" style="font-size: 1.1em">
+        Notas
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <br />
+
+  <div class="wall-background h-screen">
+    <ng-container *ngIf="currentTab === 'geral'">
+      <div style="max-width: 95%; margin: auto">
+        <app-versao-main></app-versao-main>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="currentTab === 'notas'">
+      <div style="max-width: 95%; margin: auto">
+        <app-versao-notas></app-versao-notas>
+      </div>
+    </ng-container>
+  </div>
+</ion-content>

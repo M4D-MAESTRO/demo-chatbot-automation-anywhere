@@ -1,0 +1,52 @@
+<p-dialog *ngIf="selectedImovel" [(visible)]="showDialog" appendTo="body" [modal]="true" [closable]="false"
+  [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '40vw'}" [draggable]="false">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center ">
+      <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle"
+        style="width:32px;height:32px">
+        <i class="pi pi-info text-lg"></i>
+      </span>
+      <span class="text-2xl text-900 text-center">Imovel</span>
+    </div>
+  </ng-template>
+  <div class="grid">
+    <div class="col-12 line-height-3 p-0 m-1 text-center">
+      <div class=" text-xl text-800">{{ selectedImovel.id }}</div>
+      <div class="mt-2">Bloco - {{ selectedImovel.numero_bloco }}</div>
+      <div class="">AP/Casa n° - {{ selectedImovel.apartamento_casa }} </div>
+
+      <div class="mt-2">RGI: {{ selectedImovel.numero_rgi }}</div>
+      <div class="">IPTU: {{ selectedImovel.numero_iptu }}</div>
+
+      <div class="mt-2">1° Preponente: {{ selectedImovel.preponente1.nome }}
+        <span *ngIf="selectedImovel.preponente1">-
+          {{ selectedImovel.preponente1.cpf | cpfMask }}
+        </span>
+      </div>
+      <div class="">2° Preponente: {{ selectedImovel.preponente2?.nome || 'Não informado' }}
+        <span *ngIf="selectedImovel.preponente2">-
+          {{ selectedImovel.preponente2.cpf | cpfMask }}
+        </span>
+      </div>
+      <div class="">3° Preponente: {{ selectedImovel.preponente3?.nome || 'Não informado' }}
+        <span *ngIf="selectedImovel.preponente3">-
+          {{ selectedImovel.preponente3.cpf | cpfMask }}
+        </span>
+      </div>
+      <div class="mt-2">Inquilino: {{ selectedImovel.inquilino?.nome || 'Não informado' }}
+        <span *ngIf="selectedImovel.inquilino">-
+          {{ selectedImovel.inquilino.cpf | cpfMask }}
+        </span>
+      </div>
+      <div class="">Proprietário de repasse: {{ selectedImovel.proprietario_repasse?.nome || 'Não informado' }}
+        <span *ngIf="selectedImovel.proprietario_repasse">-
+          {{ selectedImovel.proprietario_repasse.cpf | cpfMask }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple icon="pi pi-check" (click)="close()" label="OK"></button>
+  </ng-template>
+</p-dialog>
